@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNCLONED | เสื้อผ้าแฮนด์เมด</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        craft: {
+                            50: '#fdfbf7',
+                            100: '#f4ede4',
+                            200: '#e5d5c5',
+                            300: '#d1b69d',
+                            400: '#be9575',
+                            500: '#af7b56',
+                            600: '#a3664a',
+                            700: '#87513e',
+                            800: '#6f4436',
+                            900: '#5a382d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #fdfbf7;
+            color: #5a382d;
+            scroll-behavior: smooth;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .page-btn.active {
+            background-color: #a3664a;
+            color: white;
+            border-color: #a3664a;
+        }
+        .animate-fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Custom Select Styling */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%2387513e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-craft-50/90 backdrop-blur-md border-b border-craft-100 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="goHome()">
+                    <i data-lucide="scissors" class="h-6 w-6 text-craft-600 mr-2"></i>
+                    <span class="font-semibold text-2xl tracking-wide text-craft-800">UN<span class="font-light">CLONED</span></span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden lg:flex space-x-8 items-center">
+                    <a href="#home" onclick="closeProductPage()" class="text-craft-700 hover:text-craft-500 transition-colors">หน้าแรก</a>
+                    <a href="#shop" onclick="closeProductPage()" class="text-craft-700 hover:text-craft-500 transition-colors">สินค้าทั้งหมด</a>
+                    <a href="#reviews" onclick="closeProductPage()" class="text-craft-700 hover:text-craft-500 transition-colors">รีวิว</a>
+                    <a href="#story" onclick="closeProductPage()" class="text-craft-700 hover:text-craft-500 transition-colors">เรื่องราวของเรา</a>
+                    <a href="javascript:void(0)" onclick="openHowToOrder()" class="text-craft-700 hover:text-craft-500 transition-colors">วิธีการสั่งซื้อ</a>
+                    
+                    <!-- Cart Icon -->
+                    <button id="cart-btn-desktop" onclick="toggleCart()" class="relative p-2 text-craft-700 hover:text-craft-500 transition-all duration-300 transform">
+                        <i data-lucide="shopping-bag" class="h-6 w-6"></i>
+                        <span id="cart-count" class="absolute top-0 right-0 bg-craft-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center transform translate-x-1 -translate-y-1">0</span>
+                    </button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="lg:hidden flex items-center space-x-4">
+                    <button id="cart-btn-mobile" onclick="toggleCart()" class="relative p-2 text-craft-700 transition-all duration-300 transform">
+                        <i data-lucide="shopping-bag" class="h-6 w-6"></i>
+                        <span id="mobile-cart-count" class="absolute top-0 right-0 bg-craft-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center transform translate-x-1 -translate-y-1">0</span>
+                    </button>
+                    <button id="mobile-menu-btn" class="text-craft-700 p-2">
+                        <i data-lucide="menu" class="h-6 w-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-craft-50 border-t border-craft-100 absolute w-full shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" onclick="closeProductPage(); document.getElementById('mobile-menu').classList.add('hidden');" class="block px-3 py-2 text-craft-700 hover:bg-craft-100 rounded-md">หน้าแรก</a>
+                <a href="#shop" onclick="closeProductPage(); document.getElementById('mobile-menu').classList.add('hidden');" class="block px-3 py-2 text-craft-700 hover:bg-craft-100 rounded-md">สินค้าทั้งหมด</a>
+                <a href="#reviews" onclick="closeProductPage(); document.getElementById('mobile-menu').classList.add('hidden');" class="block px-3 py-2 text-craft-700 hover:bg-craft-100 rounded-md">รีวิว</a>
+                <a href="#story" onclick="closeProductPage(); document.getElementById('mobile-menu').classList.add('hidden');" class="block px-3 py-2 text-craft-700 hover:bg-craft-100 rounded-md">เรื่องราวของเรา</a>
+                <a href="javascript:void(0)" onclick="openHowToOrder(); document.getElementById('mobile-menu').classList.add('hidden');" class="block px-3 py-2 text-craft-700 hover:bg-craft-100 rounded-md">วิธีการสั่งซื้อ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN VIEW (Home, Shop, Reviews, etc.) -->
+    <div id="main-view">
+        <!-- Hero Section -->
+        <section id="home" class="relative pt-20 pb-16 md:pt-32 md:pb-24 flex items-center min-h-[85vh]">
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1596521864156-f4422e50523e?q=80&w=2070&auto=format&fit=crop" alt="" class="w-full h-full object-cover opacity-30">
+                <div class="absolute inset-0 bg-gradient-to-r from-craft-50 via-craft-50/80 to-transparent"></div>
+            </div>
+            
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+                <div class="max-w-2xl">
+                    <span class="text-craft-500 font-medium tracking-wider text-sm uppercase mb-4 block">Handcrafted with love</span>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-semibold text-craft-800 leading-tight mb-6">
+                        ความเรียบง่าย<br>ที่ถักทอด้วยความใส่ใจ
+                    </h1>
+                    <p class="text-lg text-craft-600 mb-8 max-w-lg leading-relaxed">
+                        เสื้อผ้าฝ้ายและลินินธรรมชาติ ตัดเย็บด้วยมือทุกชิ้น ออกแบบมาเพื่อความสวมใส่สบาย มินิมอล และเป็นมิตรกับสิ่งแวดล้อมโดย UNCLONED
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#shop" class="bg-craft-600 hover:bg-craft-700 text-white px-8 py-3 rounded-md text-center transition-colors font-medium">
+                            เลือกชมสินค้า
+                        </a>
+                        <a href="#story" class="border border-craft-400 text-craft-700 hover:bg-craft-100 px-8 py-3 rounded-md text-center transition-colors font-medium">
+                            เรื่องราวของเรา
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="py-12 bg-craft-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="p-4">
+                        <i data-lucide="leaf" class="h-8 w-8 mx-auto text-craft-600 mb-4"></i>
+                        <h3 class="text-lg font-medium text-craft-800 mb-2">เส้นใยธรรมชาติ</h3>
+                        <p class="text-craft-600 text-sm">เราเลือกใช้เฉพาะผ้าฝ้ายและผ้าลินินแท้ 100% ระบายอากาศได้ดี</p>
+                    </div>
+                    <div class="p-4">
+                        <i data-lucide="scissors" class="h-8 w-8 mx-auto text-craft-600 mb-4"></i>
+                        <h3 class="text-lg font-medium text-craft-800 mb-2">ตัดเย็บด้วยมือ</h3>
+                        <p class="text-craft-600 text-sm">ใส่ใจในทุกฝีเข็มโดยช่างฝีมือผู้ชำนาญ ผลิตจำนวนจำกัด</p>
+                    </div>
+                    <div class="p-4">
+                        <i data-lucide="heart" class="h-8 w-8 mx-auto text-craft-600 mb-4"></i>
+                        <h3 class="text-lg font-medium text-craft-800 mb-2">มินิมอลดีไซน์</h3>
+                        <p class="text-craft-600 text-sm">ออกแบบให้เรียบง่าย สวมใส่ได้ทุกโอกาส และไม่มีวันตกยุค</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shop Section -->
+        <section id="shop" class="py-20 bg-craft-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-semibold text-craft-800 mb-4">คอลเลกชันล่าสุด</h2>
+                    <div class="w-24 h-1 bg-craft-300 mx-auto rounded mb-8"></div>
+                </div>
+
+                <!-- Categories Filter -->
+                <div class="flex flex-wrap justify-center gap-3 mb-10">
+                    <button onclick="setCategory('all')" class="cat-btn px-5 py-2 rounded-full text-sm font-medium transition-colors bg-craft-600 text-white" data-category="all">ทั้งหมด</button>
+                    <button onclick="setCategory('dress')" class="cat-btn px-5 py-2 rounded-full text-sm font-medium transition-colors bg-white text-craft-700 border border-craft-200 hover:border-craft-400" data-category="dress">เดรส</button>
+                    <button onclick="setCategory('top')" class="cat-btn px-5 py-2 rounded-full text-sm font-medium transition-colors bg-white text-craft-700 border border-craft-200 hover:border-craft-400" data-category="top">เสื้อ</button>
+                    <button onclick="setCategory('bottom')" class="cat-btn px-5 py-2 rounded-full text-sm font-medium transition-colors bg-white text-craft-700 border border-craft-200 hover:border-craft-400" data-category="bottom">กางเกง / กระโปรง</button>
+                    <button onclick="setCategory('set')" class="cat-btn px-5 py-2 rounded-full text-sm font-medium transition-colors bg-white text-craft-700 border border-craft-200 hover:border-craft-400" data-category="set">เซ็ต</button>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12" id="product-container">
+                    <!-- Products will be injected by JavaScript -->
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex justify-center items-center space-x-2" id="pagination-container">
+                    <!-- Pagination buttons -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Reviews Section -->
+        <section id="reviews" class="py-20 bg-craft-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-semibold text-craft-800 mb-4">เสียงจากลูกค้า</h2>
+                    <div class="w-24 h-1 bg-craft-300 mx-auto rounded"></div>
+                    <p class="mt-4 text-craft-600">ความประทับใจจากผู้สวมใส่ UNCLONED</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Video Review -->
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-craft-200 group relative">
+                        <div class="relative h-64 md:h-full min-h-[300px] cursor-pointer" onclick="showToast('ตัวอย่างวิดีโอรีวิว: ระบบเล่นวิดีโอ')">
+                            <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=1976&auto=format&fit=crop" alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                                <div class="bg-white/90 w-16 h-16 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                    <i data-lucide="play" class="h-8 w-8 text-craft-700 ml-1"></i>
+                                </div>
+                            </div>
+                            <div class="absolute bottom-4 left-4 right-4 text-white">
+                                <span class="bg-craft-600 text-xs font-medium px-2 py-1 rounded mb-2 inline-block">วิดีโอรีวิว</span>
+                                <h3 class="font-medium drop-shadow-md">คุณแอน: "เดรสตัวเก่ง ใส่สบายมากค่ะ"</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Text Review 1 -->
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-craft-200 flex flex-col">
+                        <div class="flex items-center mb-4 text-yellow-500">
+                            <i data-lucide="star" class="h-5 w-5 fill-current"></i><i data-lucide="star" class="h-5 w-5 fill-current"></i><i data-lucide="star" class="h-5 w-5 fill-current"></i><i data-lucide="star" class="h-5 w-5 fill-current"></i><i data-lucide="star" class="h-5 w-5 fill-current"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-craft-800 mb-3">"เนื้อผ้าดีมาก ไม่ระคายผิว"</h3>
+                        <p class="text-craft-600 text-sm leading-relaxed mb-6 flex-grow">สั่งซื้อเสื้อเชิ้ตคอตตอนไปประทับใจมากค่ะ ปกติเป็นคนผิวแพ้ง่ายแต่ใส่ของร้าน UNCLONED แล้วสบายมาก ลายปักก็น่ารัก งานเย็บเรียบร้อยมากค่ะ จะกลับมาอุดหนุนอีกแน่นอน</p>
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-craft-200 rounded-full flex items-center justify-center text-craft-700 font-medium">M</div>
+                            <div class="ml-3"><p class="text-sm font-medium text-craft-800">คุณมายด์</p><p class="text-xs text-craft-500">ลูกค้าที่ซื้อจริง</p></div>
+                        </div>
+                    </div>
+                    <!-- Text Review 2 -->
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-craft-200 flex flex-col">
+                        <div class="flex items-center mb-4 text-yellow-500">
+                            <i data-lucide="star" class="h-5 w-5 fill-current"></i><i data-lucide="star" class="h-5 w-5 fill-current"></i><i data-lucide="star" class="h-5 w-5 fill-current"></i><i data-lucide="star" class="h-5 w-5 fill-current"></i><i data-lucide="star" class="h-5 w-5 fill-current"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-craft-800 mb-3">"ทรงสวย ใส่แล้วดูผอม"</h3>
+                        <p class="text-craft-600 text-sm leading-relaxed mb-6 flex-grow">ชอบกางเกงลินินขากว้างมากค่ะ ทรงสวยพอดีตัว ใส่แล้วเก็บทรงดีมาก ผ้าทิ้งตัวสวย ซักแล้วสะบัดตากก็ใส่ได้เลย ไม่ต้องรีดให้เหนื่อย เหมาะกับวันสบายๆ สุดๆ</p>
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-craft-200 rounded-full flex items-center justify-center text-craft-700 font-medium">K</div>
+                            <div class="ml-3"><p class="text-sm font-medium text-craft-800">คุณกิ๊บ</p><p class="text-xs text-craft-500">ลูกค้าที่ซื้อจริง</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Story Section -->
+        <section id="story" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <div class="w-full md:w-1/2">
+                        <img src="https://images.unsplash.com/photo-1555448248-2571daf6344b?q=80&w=1974&auto=format&fit=crop" alt="" class="w-full h-[500px] object-cover rounded-lg shadow-lg">
+                    </div>
+                    <div class="w-full md:w-1/2">
+                        <span class="text-craft-500 font-medium tracking-wider text-sm uppercase mb-2 block">Our Story</span>
+                        <h2 class="text-3xl font-semibold text-craft-800 mb-6">จากความรักในงานผ้า<br>สู่เครื่องแต่งกายที่ยั่งยืน</h2>
+                        <p class="text-craft-600 mb-4 leading-relaxed">UNCLONED เริ่มต้นจากความหลงใหลในผิวสัมผัสของเส้นใยธรรมชาติ เราเชื่อว่าเสื้อผ้าที่ดีไม่เพียงแต่ต้องดูสวยงาม แต่ต้องให้ความรู้สึกสบายแก่ผู้สวมใส่ และเป็นมิตรกับโลกใบนี้ (ชื่อแบรนด์สื่อถึงความไม่ซ้ำซากจำเจ เหมือนงานคราฟต์ที่ไม่มีชิ้นไหนเหมือนกัน 100%)</p>
+                        <p class="text-craft-600 mb-6 leading-relaxed">เสื้อผ้าทุกชิ้นของเราถูกออกแบบและตัดเย็บอย่างตั้งใจในสตูดิโอเล็กๆ เราเลือกใช้ผ้าที่ผ่านกระบวนการย้อมสีธรรมชาติ เพื่อให้ได้เฉดสีที่อบอุ่น ละมุนตา และไม่ก่อให้เกิดสารพิษตกค้าง</p>
+                        <ul class="space-y-3 text-craft-700">
+                            <li class="flex items-center"><i data-lucide="check" class="h-5 w-5 text-craft-500 mr-2"></i> สนับสนุนแรงงานช่างฝีมือในท้องถิ่น</li>
+                            <li class="flex items-center"><i data-lucide="check" class="h-5 w-5 text-craft-500 mr-2"></i> ลดปริมาณขยะจากการผลิต (Zero Waste Pattern)</li>
+                            <li class="flex items-center"><i data-lucide="check" class="h-5 w-5 text-craft-500 mr-2"></i> บรรจุภัณฑ์เป็นมิตรต่อสิ่งแวดล้อม</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- PRODUCT DETAIL VIEW (หน้าแยกสำหรับรายละเอียดสินค้า) -->
+    <div id="product-view" class="hidden pt-28 pb-20 bg-white min-h-screen animate-fade-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Breadcrumb Navigation -->
+            <nav class="flex items-center text-sm text-craft-500 mb-8 border-b border-craft-100 pb-4">
+                <a href="javascript:void(0)" onclick="closeProductPage()" class="hover:text-craft-800 flex items-center transition-colors">
+                    <i data-lucide="arrow-left" class="h-4 w-4 mr-1"></i> กลับไปหน้าสินค้า
+                </a>
+                <span class="mx-3 text-craft-300">|</span>
+                <span class="text-craft-400">หมวดหมู่: <span id="page-breadcrumb-cat" class="capitalize"></span></span>
+            </nav>
+
+            <div class="flex flex-col md:flex-row gap-10 lg:gap-16">
+                <!-- ฝั่งซ้าย: รูปภาพและวิดีโอ -->
+                <div class="w-full md:w-1/2 flex flex-col gap-6">
+                    <div class="relative rounded-xl overflow-hidden shadow-sm border border-craft-100 group">
+                        <img id="page-img" src="" alt="" class="w-full h-auto object-cover max-h-[600px] group-hover:scale-105 transition-transform duration-700">
+                        <div id="page-tag-overlay" class="absolute top-4 left-4"></div>
+                    </div>
+                    
+                    <!-- เครื่องเล่นวิดีโอ -->
+                    <div id="page-video-container" class="hidden flex-col gap-3 bg-craft-50 p-4 rounded-xl border border-craft-100">
+                        <h4 class="text-sm font-semibold text-craft-800 flex items-center">
+                            <i data-lucide="video" class="mr-2 h-4 w-4 text-craft-600"></i> วิดีโอตัวอย่างสินค้า
+                        </h4>
+                        <video id="page-video" controls class="w-full rounded-lg shadow-sm bg-black" preload="metadata">
+                            <source id="page-video-src" src="" type="video/mp4">
+                            บราวเซอร์ของคุณไม่รองรับการเล่นวิดีโอ
+                        </video>
+                    </div>
+                </div>
+
+                <!-- ฝั่งขวา: รายละเอียด, ไซส์, ปุ่มซื้อ -->
+                <div class="w-full md:w-1/2 flex flex-col">
+                    <h1 id="page-title" class="text-3xl lg:text-4xl font-semibold text-craft-800 mb-4 leading-tight"></h1>
+                    <p id="page-price" class="text-2xl text-craft-600 font-medium mb-8"></p>
+                    
+                    <div class="h-px w-full bg-craft-100 mb-8"></div>
+                    
+                    <!-- ส่วนเลือกขนาด -->
+                    <div id="page-size-container" class="mb-8">
+                        <div class="flex justify-between items-end mb-3">
+                            <h4 class="text-sm font-semibold text-craft-800">เลือกขนาด <span class="text-red-400">*</span></h4>
+                            <a href="javascript:void(0)" class="text-xs text-craft-500 underline hover:text-craft-800">ตารางไซส์ (Size Guide)</a>
+                        </div>
+                        <div id="page-sizes" class="flex flex-wrap gap-3"></div>
+                    </div>
+
+                    <!-- ส่วนเพิ่มลงตะกร้า -->
+                    <div class="flex items-center gap-4 mb-10">
+                        <div class="flex items-center border-2 border-craft-200 rounded-lg h-14 bg-white">
+                            <button onclick="updatePageQty(-1)" class="px-5 h-full text-craft-600 hover:bg-craft-50 rounded-l-lg transition-colors text-lg">-</button>
+                            <span id="page-qty" class="font-medium text-craft-800 w-12 text-center text-lg">1</span>
+                            <button onclick="updatePageQty(1)" class="px-5 h-full text-craft-600 hover:bg-craft-50 rounded-r-lg transition-colors text-lg">+</button>
+                        </div>
+                        <button id="page-add-btn" class="flex-1 bg-craft-600 hover:bg-craft-700 text-white h-14 rounded-lg transition-colors flex justify-center items-center font-medium shadow-md text-lg">
+                            <i data-lucide="shopping-cart" class="mr-2 h-5 w-5"></i> เพิ่มลงตะกร้า
+                        </button>
+                    </div>
+
+                    <!-- รายละเอียดสินค้า (Description) -->
+                    <div class="prose prose-craft text-craft-700 max-w-none">
+                        <h4 class="text-lg font-semibold text-craft-800 mb-4 flex items-center">
+                            <i data-lucide="file-text" class="mr-2 h-5 w-5 text-craft-500"></i> รายละเอียดสินค้า
+                        </h4>
+                        <div class="bg-craft-50/50 p-6 rounded-xl border border-craft-100">
+                            <!-- เพิ่ม whitespace-pre-line เพื่อให้อ่านขึ้นบรรทัดใหม่จากข้อมูลได้ถูกต้อง -->
+                            <p id="page-desc" class="leading-loose whitespace-pre-line text-sm md:text-base"></p>
+                        </div>
+                    </div>
+                    
+                    <!-- นโยบายเสริม -->
+                    <div class="mt-8 grid grid-cols-2 gap-4 border-t border-craft-100 pt-8">
+                        <div class="flex items-center gap-3 text-sm text-craft-600">
+                            <div class="w-10 h-10 bg-craft-100 rounded-full flex items-center justify-center shrink-0">
+                                <i data-lucide="truck" class="h-5 w-5 text-craft-600"></i>
+                            </div>
+                            <span>จัดส่งฟรี<br>เมื่อซื้อครบ 1,500.-</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-craft-600">
+                            <div class="w-10 h-10 bg-craft-100 rounded-full flex items-center justify-center shrink-0">
+                                <i data-lucide="refresh-cw" class="h-5 w-5 text-craft-600"></i>
+                            </div>
+                            <span>เปลี่ยนไซส์ได้<br>ภายใน 7 วัน</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shopping Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onclick="toggleCart()"></div>
+        <div class="absolute inset-y-0 right-0 max-w-md w-full bg-craft-50 shadow-xl flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out" id="cart-panel">
+            <div class="flex items-center justify-between p-6 border-b border-craft-200">
+                <h2 class="text-xl font-medium text-craft-800 flex items-center">
+                    <i data-lucide="shopping-cart" class="mr-2 h-5 w-5"></i> ตะกร้าสินค้า
+                </h2>
+                <button onclick="toggleCart()" class="text-craft-500 hover:text-craft-800">
+                    <i data-lucide="x" class="h-6 w-6"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6 relative no-scrollbar">
+                <div class="text-center text-craft-400 mt-10" id="empty-cart-msg">
+                    <i data-lucide="shopping-bag" class="h-12 w-12 mx-auto mb-3 opacity-50"></i>
+                    <p>ไม่มีสินค้าในตะกร้า</p>
+                </div>
+                <div id="cart-items" class="space-y-4"></div>
+            </div>
+            <div class="border-t border-craft-200 p-6 bg-craft-100/50">
+                <div class="flex justify-between text-lg font-medium text-craft-800 mb-4">
+                    <span>ยอดรวมสุทธิ</span>
+                    <span id="cart-total">฿0</span>
+                </div>
+                <button class="w-full bg-craft-600 hover:bg-craft-700 text-white py-3 px-4 rounded-md transition-colors flex justify-center items-center font-medium">
+                    ชำระเงิน <i data-lucide="arrow-right" class="ml-2 h-4 w-4"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- How To Order Modal -->
+    <div id="howto-modal" class="fixed inset-0 z-[80] hidden items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeHowToOrder()"></div>
+        <div class="relative bg-white w-11/12 max-w-2xl rounded-xl shadow-2xl p-6 md:p-10 transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto no-scrollbar" id="howto-modal-content">
+            <button onclick="closeHowToOrder()" class="absolute top-4 right-4 text-craft-500 hover:text-craft-800 transition-colors">
+                <i data-lucide="x" class="h-6 w-6"></i>
+            </button>
+            <div class="text-center mb-8">
+                <div class="bg-craft-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="package-check" class="h-8 w-8 text-craft-600"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-semibold text-craft-800 mb-2">วิธีการสั่งซื้อสินค้า</h2>
+                <p class="text-craft-600">ขั้นตอนง่ายๆ ในการเป็นเจ้าของเสื้อผ้า UNCLONED</p>
+            </div>
+            <div class="mt-8 text-center">
+                <button onclick="closeHowToOrder()" class="bg-craft-600 hover:bg-craft-700 text-white px-8 py-3 rounded-md font-medium transition-colors">
+                    เข้าใจแล้ว เริ่มช้อปเลย!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-craft-900 text-craft-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="scissors" class="h-6 w-6 text-craft-400 mr-2"></i>
+                        <span class="font-semibold text-xl tracking-wide text-white">UN<span class="font-light">CLONED</span></span>
+                    </div>
+                    <p class="text-sm text-craft-300 max-w-sm">แบรนด์เสื้อผ้าทำมือที่เน้นความเรียบง่าย สวมใส่สบาย ผลิตจากผ้าฝ้ายและลินินธรรมชาติ</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-medium mb-4">เมนูหลัก</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#home" onclick="closeProductPage()" class="hover:text-white transition-colors">หน้าแรก</a></li>
+                        <li><a href="#shop" onclick="closeProductPage()" class="hover:text-white transition-colors">สินค้าทั้งหมด</a></li>
+                    </ul>
+                </div>
+                    <div class="mt-8 text-center">
+                        <button onclick="closeHowToOrder()" class="bg-craft-600 hover:bg-craft-700 text-white px-8 py-3 rounded-md font-medium transition-colors">
+                            เข้าใจแล้ว เริ่มช้อปเลย!
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        lucide.createIcons();
+
+        // Product Data (Updated with full descriptions based on the guide)
+        const products = [
+            {
+                id: 1,
+                name: "เดรสลินินมินิมอล ทรงปล่อย (รุ่น Mali Dress)",
+                category: "dress",
+                variants: [{ size: "Free size", price: 1290 }],
+                image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?q=80&w=1976&auto=format&fit=crop",
+                tag: "Bestseller",
+                video: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+                description: "✦ เรื่องราวของชุดนี้ (Story):\nเดรสรุ่น Mali ออกแบบมาเพื่อวันสบายๆ ที่ยังต้องการความดูดี ทรงคอวีช่วยให้ช่วงคอดูโปร่ง ทิ้งตัวสวย ตัดเย็บด้วยความใส่ใจจากช่างฝีมือในสตูดิโอเล็กๆ ของเรา เรียบง่ายแต่แฝงไปด้วยรายละเอียด\n\n✦ วัสดุ (Material):\n- ผ้าลินินธรรมชาติ 100% (Premium Natural Linen)\n- เนื้อผ้าโปร่ง ระบายอากาศได้ดีเยี่ยม เหมาะกับอากาศเมืองไทย\n- มีซับในกระโปรงทำจากผ้าคอตตอนเนื้อบาง (ไม่โป๊แน่นอนค่ะ)\n\n✦ ขนาด (Size Guide):\n- Free size : อก 32-38\" | เอว 28-36\" | สะโพก 40\" | ความยาว 42\"\n👤 นางแบบในรูป: สูง 165 ซม. อก 32\" เอว 25\" ใส่ไซส์ Free size ค่ะ\n\n✦ การดูแลรักษา (Care):\n- แนะนำให้ซักมือเพื่อถนอมใยผ้า หรือใส่ถุงตาข่ายซักเครื่องโหมดถนอมผ้า (น้ำเย็น)\n- สะบัดให้หมาดแล้วตากในที่ร่ม (หลีกเลี่ยงแดดจัดเพื่อรักษาสีผ้า)\n- รีดด้วยไฟกลาง-สูง หรือปล่อยให้ยับนิดๆ เพื่อความเป็นธรรมชาติของผ้าลินิน\n\n✦ ระยะเวลาจัดส่ง:\n- สินค้ารุ่นนี้เป็นงาน Made to Order ใช้เวลาตัดเย็บ 5-7 วันทำการค่ะ"
+            },
+            {
+                id: 2,
+                name: "เสื้อเชิ้ตคอตตอน ปักลายดอกไม้",
+                category: "top",
+                variants: [ { size: "S", price: 890 }, { size: "M", price: 950 }, { size: "L", price: 990 } ],
+                image: "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?q=80&w=1925&auto=format&fit=crop",
+                tag: "New",
+                video: "https://www.w3schools.com/html/mov_bbb.mp4",
+                description: "✦ เรื่องราวของชุดนี้ (Story):\nเสื้อเชิ้ตผ้าคอตตอนเนื้อนุ่ม เพิ่มดีเทลปักลายดอกไม้เล็กๆ ด้วยมือบริเวณปกเสื้อและกระเป๋าหน้า ให้ลุคที่ดูน่ารัก อบอุ่น แมทช์ง่ายกับกางเกงหรือกระโปรงทุกแบบ เหมาะสำหรับใส่วันทำงานหรือไปคาเฟ่\n\n✦ วัสดุ (Material):\n- ผ้าคอตตอนญี่ปุ่น 100% (Japanese Cotton)\n- เนื้อผ้านุ่ม ระบายอากาศได้ดีเยี่ยม สวมใส่สบายตลอดวัน\n- ไม่มีซับใน เนื้อผ้าทึบแสง ไม่ต้องกลัวโป๊ค่ะ\n\n✦ ขนาด (Size Guide):\n- Size S : อก 34\" | ความยาว 22\"\n- Size M : อก 36\" | ความยาว 23\"\n- Size L : อก 38\" | ความยาว 24\"\n👤 นางแบบในรูป: สูง 162 ซม. สัดส่วน 31-26-36 ใส่ไซส์ S ค่ะ\n\n✦ การดูแลรักษา (Care):\n- ซักมือเพื่อถนอมลายปัก หากซักเครื่องควรกลับด้านและใส่ถุงตาข่าย\n- รีดด้วยไฟปานกลาง\n\n✦ ระยะเวลาจัดส่ง:\n- งานปักมือ Made to Order ใช้เวลาทำ 3-5 วันค่ะ"
+            },
+            {
+                id: 3,
+                name: "กระโปรงยาวผ้าฝ้ายสาลู 2 ชั้น",
+                category: "bottom",
+                variants: [ { size: "ความยาว 34 นิ้ว", price: 1090 }, { size: "ความยาว 38 นิ้ว", price: 1190 } ],
+                image: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?q=80&w=1964&auto=format&fit=crop",
+                tag: null,
+                description: "✦ เรื่องราวของชุดนี้ (Story):\nกระโปรงยาวทรงเอเย็บต่อระบาย เนื้อผ้ามีเท็กซ์เจอร์ยับๆ สไตล์ธรรมชาติดูมีเสน่ห์ เอวยางยืดสวมใส่สบายสุดๆ จับคู่กับเสื้อยืดเรียบๆ ก็ดูมีสไตล์\n\n✦ วัสดุ (Material):\n- ผ้าฝ้ายสาลู 100% (Double Gauze Cotton)\n- ยิ่งซักยิ่งนุ่ม สัมผัสเบาสบาย\n- มีซับในในตัว ไม่บาง ไม่ต้องกลัวโป๊ค่ะ\n\n✦ ขนาด (Size Guide):\n- เอวยางยืดสม็อคหลัง (ยืดได้ถึง 34 นิ้ว) | สะโพก Free size\n- ความยาว : มีให้เลือก 34 นิ้ว และ 38 นิ้ว\n👤 นางแบบในรูป: สูง 160 ซม. เอว 25\" ใส่ความยาว 34 นิ้วค่ะ\n\n✦ การดูแลรักษา (Care):\n- ซักเครื่องโหมดถนอมผ้าได้ตามปกติ\n- ผ้าไม่ต้องรีด (Wash and Wear) ซักตากแล้วใส่ได้เลย\n- สีอาจตกในการซัก 1-2 ครั้งแรก ควรแยกซัก\n\n✦ ระยะเวลาจัดส่ง:\n- สินค้าพร้อมส่ง (Ready to ship) ภายใน 1-2 วันค่ะ"
+            },
+            {
+                id: 4,
+                name: "กางเกงขากว้าง ผ้าลินินผสม",
+                category: "bottom",
+                variants: [ { size: "S", price: 1150 }, { size: "M", price: 1150 }, { size: "L", price: 1250 }, { size: "XL", price: 1250 } ],
+                image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=1974&auto=format&fit=crop",
+                tag: null,
+                description: "✦ เรื่องราวของชุดนี้ (Story):\nกางเกงทรงหลวมขากว้างที่ใส่สบายที่สุดแห่งปี ตัดเย็บจากผ้าลินินผสมคอตตอน ทำให้ผ้าอยู่ทรงแต่ยังคงความนิ่มนวล มีกระเป๋าสองข้างใช้งานได้จริง ใส่พรางหุ่นให้ดูเพรียวขึ้น\n\n✦ วัสดุ (Material):\n- ลินิน 55%, คอตตอน 45% (Linen-Cotton Blend)\n- ซิปหน้า ซ่อนตะขอ งานเย็บเก็บขอบพรีเมียม\n\n✦ ขนาด (Size Guide):\n- Size S : เอว 25-26\" | สะโพก 36\" | ยาว 38\"\n- Size M : เอว 27-28\" | สะโพก 38\" | ยาว 38.5\"\n- Size L : เอว 29-30\" | สะโพก 40\" | ยาว 39\"\n- Size XL : เอว 31-32\" | สะโพก 42\" | ยาว 39\"\n👤 นางแบบในรูป: สูง 168 ซม. เอว 25\" ใส่ไซส์ S ค่ะ\n\n✦ การดูแลรักษา (Care):\n- ซักมือหรือเครื่องโหมดปกติ\n- รีดไฟกลางเพื่อให้กางเกงทิ้งตัวสวย\n\n✦ ระยะเวลาจัดส่ง:\n- สินค้าพร้อมส่งค่ะ"
+            },
+            {
+                id: 5,
+                name: "เสื้อกั๊กผ้าฝ้ายทอมือ สไตล์มูจิ",
+                category: "top",
+                variants: [{ size: "Free size", price: 790 }],
+                image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=1972&auto=format&fit=crop",
+                tag: null,
+                description: "✦ เรื่องราวของชุดนี้ (Story):\nเพิ่มเลเยอร์ให้การแต่งตัวด้วยเสื้อกั๊กผ้าฝ้ายทอมือ ทรงน่ารัก สไตล์มินิมอลญี่ปุ่น ใส่ทับเสื้อยืดหรือเชิ้ตก็ดูมีสไตล์ ใส่ได้หลากหลายโอกาส\n\n✦ วัสดุ (Material):\n- ผ้าฝ้ายทอมือย้อมสีธรรมชาติไม่มีสารเคมี\n- สีอาจมีความคลาดเคลื่อนเล็กน้อยในแต่ละล็อตเนื่องจากเป็นสีธรรมชาติ\n\n✦ ขนาด (Size Guide):\n- Free size : อก 40\" | ความยาว 20\"\n\n✦ การดูแลรักษา (Care):\n- ซักมือเพื่อถนอมผ้าและสี\n- ควรแยกซักใน 1-2 ครั้งแรก ป้องกันสีตก\n\n✦ ระยะเวลาจัดส่ง:\n- สินค้าพร้อมส่ง (Ready to ship)"
+            },
+            {
+                id: 6,
+                name: "เดรสผ้าฝ้าย คอวี ผูกเอว",
+                category: "dress",
+                variants: [ { size: "S-M", price: 1350 }, { size: "L-XL", price: 1450 } ],
+                image: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?q=80&w=1974&auto=format&fit=crop",
+                tag: "New",
+                description: "✦ เรื่องราวของชุดนี้ (Story):\nเดรสผ้าฝ้ายเนื้อดี ทรงคอวีลึกพอประมาณช่วยให้ดูผอมเพรียว มาพร้อมสายผูกเอวเข้าชุด ปรับรูปร่างได้ตามต้องการ กระโปรงพริ้วสวยเดินสบาย\n\n✦ วัสดุ (Material):\n- ผ้าฝ้าย 100% เกรดพรีเมียม\n- สัมผัสนุ่ม ไม่ระคายผิว\n- ไม่มีซับใน แนะนำให้ใส่เสื้อซับค่ะ\n\n✦ ขนาด (Size Guide):\n- S-M : อก 32-36\" | เอวผูกปรับได้ | ความยาว 45\"\n- L-XL : อก 38-42\" | เอวผูกปรับได้ | ความยาว 45\"\n\n✦ การดูแลรักษา (Care):\n- ซักเครื่องโหมดถนอมผ้า หรือซักมือ\n- รีดด้วยไฟปานกลาง\n\n✦ ระยะเวลาจัดส่ง:\n- สินค้า Made to Order 5-7 วันค่ะ"
+            },
+            {
+                id: 7,
+                name: "เสื้อเบลาส์ แขนพอง ผ้าลินิน",
+                category: "top",
+                variants: [ { size: "S", price: 950 }, { size: "M", price: 950 }, { size: "L", price: 1050 } ],
+                image: "https://images.unsplash.com/photo-1564222256577-45e728f2c611?q=80&w=2000&auto=format&fit=crop",
+                tag: null,
+                description: "✦ เรื่องราวของชุดนี้ (Story):\nเสื้อเบลาส์ดีไซน์แขนพองตุ๊กตาดูหวานละมุน คอเหลี่ยมช่วยโชว์ช่วงไหปลาร้า ใส่ไปทำงานหรือไปเที่ยวก็เอาอยู่ แมทช์ง่ายกับกางเกงยีนส์หรือสแล็ค\n\n✦ วัสดุ (Material):\n- ลินิน 100% ระบายความร้อนได้ดี\n\n✦ ขนาด (Size Guide):\n- S : อก 34\"\n- M : อก 36\"\n- L : อก 38\"\n\n✦ การดูแลรักษา (Care):\n- แนะนำให้ซักมือหรือซักเครื่องโหมดถนอมผ้า\n- ผ้าลินินอาจหดตัวเล็กน้อยหลังการซักครั้งแรก\n\n✦ ระยะเวลาจัดส่ง:\n- สินค้าพร้อมส่ง"
+            },
+            {
+                id: 8,
+                name: "เซ็ตชุดนอนผ้าสาลู นุ่มพิเศษ",
+                category: "set",
+                variants: [ { size: "M", price: 1490 }, { size: "L", price: 1590 } ],
+                image: "https://images.unsplash.com/photo-1578681994506-b8f463449011?q=80&w=1935&auto=format&fit=crop",
+                tag: "Limited",
+                description: "✦ เรื่องราวของชุดนี้ (Story):\nชุดนอน 2 ชิ้น (เสื้อและกางเกง) ตัดเย็บจากผ้าฝ้ายสาลู 2 ชั้น ที่ยิ่งซักยิ่งนุ่ม มอบค่ำคืนที่แสนสบาย ไม่อึดอัด และปราศจากสารเคมี เหมาะมากสำหรับคนผิวแพ้ง่าย\n\n✦ วัสดุ (Material):\n- ผ้าฝ้ายสาลู 100% นุ่มพิเศษ\n- บรรจุภัณฑ์: ถุงผ้าสาลูเข้าชุดฟรี\n\n✦ ขนาด (Size Guide):\n- M : เสื้อ อก 40\" | กางเกง เอว 24-34\"\n- L : เสื้อ อก 44\" | กางเกง เอว 28-38\"\n\n✦ การดูแลรักษา (Care):\n- ซักเครื่องได้ปกติ ยิ่งซักยิ่งนุ่มฟู\n- ไม่ต้องรีด\n\n✦ ระยะเวลาจัดส่ง:\n- สินค้าพร้อมส่ง (Ready to ship)"
+            }
+        ];
+
+        const formatPrice = (price) => '฿' + price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+        // --- Store / Pagination Logic ---
+        let currentCategory = 'all';
+        let currentPage = 1;
+        const itemsPerPage = 8;
+
+        function setCategory(category) {
+            currentCategory = category;
+            currentPage = 1;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if(btn.dataset.category === category) {
+                    btn.classList.add('bg-craft-600', 'text-white');
+                    btn.classList.remove('bg-white', 'text-craft-700', 'border', 'border-craft-200', 'hover:border-craft-400');
+                } else {
+                    btn.classList.remove('bg-craft-600', 'text-white');
+                    btn.classList.add('bg-white', 'text-craft-700', 'border', 'border-craft-200', 'hover:border-craft-400');
+                }
+            });
+            renderProducts();
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            renderProducts();
+            document.getElementById('shop').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('product-container');
+            const paginationContainer = document.getElementById('pagination-container');
+            container.innerHTML = '';
+            
+            let filteredProducts = products;
+            if (currentCategory !== 'all') {
+                filteredProducts = products.filter(p => p.category === currentCategory);
+            }
+
+            const totalItems = filteredProducts.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const paginatedProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+
+            if (paginatedProducts.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-craft-500">ไม่มีสินค้าในหมวดหมู่นี้</div>`;
+            } else {
+                paginatedProducts.forEach(product => {
+                    let tagHTML = '';
+                    let videoIconHTML = product.video ? `<div class="absolute top-3 right-3 bg-black/60 text-white p-1.5 rounded-full z-10 shadow-sm" title="มีวิดีโอ"><i data-lucide="play" class="h-4 w-4 fill-white"></i></div>` : '';
+                    if (product.tag) {
+                        tagHTML = `<div class="absolute top-3 left-3 bg-craft-600 text-white text-xs font-medium px-2 py-1 rounded tracking-wider z-10">${product.tag}</div>`;
+                    }
+
+                    const prices = product.variants.map(v => v.price);
+                    const minPrice = Math.min(...prices);
+                    const maxPrice = Math.max(...prices);
+                    const priceDisplay = minPrice === maxPrice ? formatPrice(minPrice) : `${formatPrice(minPrice)} - ${formatPrice(maxPrice)}`;
+
+                    // UI สำหรับเลือกไซส์หน้าการ์ด
+                    let sizeSelectorHTML = '';
+                    if (product.variants.length > 1) {
+                        let options = product.variants.map(v => `<option value="${v.size}">${v.size}</option>`).join('');
+                        sizeSelectorHTML = `
+                            <select id="size-select-${product.id}" class="w-full border border-craft-200 rounded-md text-sm text-craft-700 bg-craft-50/50 py-2 px-3 focus:outline-none focus:border-craft-400 mb-3 cursor-pointer transition-colors hover:bg-white outline-none">
+                                ${options}
+                            </select>
+                        `;
+                    } else {
+                        // ถ้ามีขนาดเดียวโชว์เป็นข้อความ
+                        sizeSelectorHTML = `<div class="h-[38px] mb-3 text-sm text-craft-500 flex items-center justify-center bg-craft-50/30 rounded-md border border-dashed border-craft-200">ขนาดเดียว (Free size)</div>`; 
+                    }
+
+                    const productHTML = `
+                        <div class="group bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden relative border border-craft-100 flex flex-col h-full animate-fade-in">
+                            ${tagHTML}
+                            ${videoIconHTML}
+                            <div class="relative h-72 overflow-hidden cursor-pointer" onclick="openProductPage(${product.id})">
+                                <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <div class="p-5 flex flex-col flex-grow">
+                                <h3 class="text-craft-800 font-medium text-lg mb-1 truncate cursor-pointer hover:text-craft-600 transition-colors" onclick="openProductPage(${product.id})">${product.name}</h3>
+                                <p class="text-craft-500 font-semibold mb-5">${priceDisplay}</p>
+                                
+                                <div class="mt-auto flex flex-col">
+                                    ${sizeSelectorHTML}
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <button onclick="addToCartFromCard(${product.id}, event)" class="bg-craft-600 hover:bg-craft-700 text-white py-2 rounded-md text-sm font-medium transition-colors flex justify-center items-center shadow-sm">
+                                            <i data-lucide="shopping-cart" class="h-4 w-4 mr-1"></i> ตะกร้า
+                                        </button>
+                                        <button onclick="openProductPage(${product.id})" class="border border-craft-300 text-craft-700 hover:bg-craft-50 py-2 rounded-md text-sm font-medium transition-colors flex justify-center items-center">
+                                            รายละเอียด
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += productHTML;
+                });
+            }
+
+            paginationContainer.innerHTML = '';
+            if (totalPages > 1) {
+                for (let i = 1; i <= totalPages; i++) {
+                    const activeClass = i === currentPage ? 'active' : 'bg-white text-craft-700 hover:bg-craft-50';
+                    paginationContainer.innerHTML += `<button onclick="changePage(${i})" class="page-btn ${activeClass} border border-craft-300 w-10 h-10 rounded-md font-medium transition-colors flex items-center justify-center">${i}</button>`;
+                }
+            }
+            lucide.createIcons();
+        }
+
+        // --- SEPARATE PAGE LOGIC (Simulated Routing) ---
+        let currentPageProductId = null;
+        let pageQty = 1;
+        let selectedVariantIndex = 0;
+
+        function openProductPage(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            currentPageProductId = productId;
+            pageQty = 1;
+            selectedVariantIndex = 0;
+
+            // Hide Main View, Show Product View
+            document.getElementById('main-view').classList.add('hidden');
+            document.getElementById('product-view').classList.remove('hidden');
+            window.scrollTo(0, 0); // เลื่อนกลับไปด้านบนสุด
+
+            // Populate Data
+            document.getElementById('page-img').src = product.image;
+            document.getElementById('page-title').textContent = product.name;
+            document.getElementById('page-desc').textContent = product.description;
+            document.getElementById('page-breadcrumb-cat').textContent = product.category === 'dress' ? 'เดรส' : product.category === 'top' ? 'เสื้อ' : product.category === 'bottom' ? 'กางเกง/กระโปรง' : 'เซ็ต';
+            
+            // Video Handling
+            const videoContainer = document.getElementById('page-video-container');
+            const videoElement = document.getElementById('page-video');
+            if (product.video) {
+                videoContainer.classList.remove('hidden');
+                videoContainer.classList.add('flex');
+                videoElement.src = product.video;
+                videoElement.load();
+            } else {
+                videoContainer.classList.add('hidden');
+                videoContainer.classList.remove('flex');
+                videoElement.pause();
+                videoElement.src = "";
+            }
+
+            const tagContainer = document.getElementById('page-tag-overlay');
+            if (product.tag) {
+                tagContainer.innerHTML = `<span class="bg-craft-600 text-white text-xs font-medium px-3 py-1 rounded tracking-wider shadow-sm">${product.tag}</span>`;
+            } else {
+                tagContainer.innerHTML = '';
+            }
+
+            document.getElementById('page-qty').textContent = pageQty;
+            renderPageVariants(product);
+            
+            document.getElementById('page-add-btn').onclick = (e) => {
+                addToCart(productId, pageQty, product.variants[selectedVariantIndex].size, e);
+            };
+
+            lucide.createIcons();
+        }
+
+        function closeProductPage() {
+            // Pause video if playing
+            document.getElementById('page-video').pause();
+            
+            document.getElementById('product-view').classList.add('hidden');
+            document.getElementById('main-view').classList.remove('hidden');
+            
+            // เลื่อนกลับมาตรงหมวดหมู่สินค้า
+            const shopSection = document.getElementById('shop');
+            if(shopSection) {
+                shopSection.scrollIntoView();
+            }
+        }
+
+        function goHome() {
+            closeProductPage();
+            window.scrollTo(0, 0);
+        }
+
+        function renderPageVariants(product) {
+            const container = document.getElementById('page-size-container');
+            const sizesDiv = document.getElementById('page-sizes');
+            
+            document.getElementById('page-price').textContent = formatPrice(product.variants[selectedVariantIndex].price);
+
+            if (product.variants.length === 1 && product.variants[0].size === "Free size") {
+                container.style.display = 'none';
+                return;
+            }
+            
+            container.style.display = 'block';
+            sizesDiv.innerHTML = product.variants.map((v, index) => `
+                <button onclick="selectPageVariant(${index})" class="px-5 py-2.5 border-2 rounded-lg text-sm font-medium transition-colors ${index === selectedVariantIndex ? 'border-craft-600 bg-craft-600 text-white shadow-sm' : 'border-craft-300 text-craft-700 hover:border-craft-500 hover:bg-craft-50'}">
+                    ${v.size}
+                </button>
+            `).join('');
+        }
+
+        function selectPageVariant(index) {
+            selectedVariantIndex = index;
+            const product = products.find(p => p.id === currentPageProductId);
+            renderPageVariants(product);
+        }
+
+        function updatePageQty(delta) {
+            pageQty += delta;
+            if (pageQty < 1) pageQty = 1;
+            document.getElementById('page-qty').textContent = pageQty;
+        }
+
+        // --- CART LOGIC ---
+        let cart = [];
+
+        function addToCartFromCard(productId, event) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            let size = product.variants[0].size;
+            // ดึงข้อมูลไซส์จาก Dropdown หน้าการ์ด
+            if (product.variants.length > 1) {
+                const selectEl = document.getElementById(`size-select-${productId}`);
+                if (selectEl) size = selectEl.value;
+            }
+            addToCart(productId, 1, size, event);
+        }
+
+        function addToCart(productId, quantity = 1, size, event) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            const variant = product.variants.find(v => v.size === size);
+            if (!variant) return;
+
+            const cartKey = `${productId}-${size}`;
+            const existingItem = cart.find(item => item.cartKey === cartKey);
+            
+            if (existingItem) { existingItem.quantity += quantity; } 
+            else {
+                cart.push({
+                    cartKey: cartKey, productId: productId, name: product.name, image: product.image,
+                    size: size, price: variant.price, quantity: quantity
+                });
+            }
+
+            updateCartUI();
+            
+            // Animation บินเข้าตะกร้า
+            if (event) {
+                let imgEl = null;
+                // หาภาพจากองค์ประกอบที่ถูกคลิก
+                const card = event.target.closest('.group');
+                if (card) {
+                    imgEl = card.querySelector('img');
+                } else {
+                    imgEl = document.getElementById('page-img'); // ดึงภาพจากหน้ารายละเอียด
+                }
+
+                if (imgEl) {
+                    flyToCartAnimation(imgEl);
+                }
+            }
+        }
+
+        function flyToCartAnimation(imgEl) {
+            const isMobile = window.innerWidth < 1024;
+            const targetElement = document.getElementById(isMobile ? 'cart-btn-mobile' : 'cart-btn-desktop');
+
+            if (!imgEl || !targetElement) return;
+
+            // พิกัดเริ่มต้นและสิ้นสุด
+            const startRect = imgEl.getBoundingClientRect();
+            const endRect = targetElement.getBoundingClientRect();
+
+            // สร้างภาพจำลองสำหรับ Animation
+            const flyingImg = imgEl.cloneNode(true);
+            flyingImg.className = 'fixed z-[100] object-cover rounded-md shadow-xl border-2 border-craft-600';
+            flyingImg.style.width = `${startRect.width}px`;
+            flyingImg.style.height = `${startRect.height}px`;
+            flyingImg.style.left = `${startRect.left}px`;
+            flyingImg.style.top = `${startRect.top}px`;
+            flyingImg.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; // bouncy curve
+            flyingImg.style.pointerEvents = 'none';
+
+            document.body.appendChild(flyingImg);
+
+            // บังคับให้เบราว์เซอร์เรนเดอร์ก่อนเริ่มแอนิเมชัน
+            void flyingImg.offsetWidth;
+
+            // คำนวณจุดศูนย์กลางของตะกร้า
+            const targetCenterX = endRect.left + endRect.width / 2;
+            const targetCenterY = endRect.top + endRect.height / 2;
+
+            // ขยับรูปไปที่ตะกร้า
+            flyingImg.style.left = `${targetCenterX - startRect.width / 2}px`;
+            flyingImg.style.top = `${targetCenterY - startRect.height / 2}px`;
+            flyingImg.style.transform = 'scale(0.05) rotate(15deg)'; // ย่อเล็กลงและเอียงนิดๆ
+            flyingImg.style.opacity = '0.2';
+
+            // จัดการหลังจากแอนิเมชันจบ
+            setTimeout(() => {
+                flyingImg.remove();
+                
+                // เอฟเฟกต์เด้งที่ไอคอนตะกร้า
+                targetElement.classList.add('scale-125');
+                setTimeout(() => targetElement.classList.remove('scale-125'), 300);
+            }, 800);
+        }
+
+        function removeFromCart(cartKey) {
+            cart = cart.filter(item => item.cartKey !== cartKey);
+            updateCartUI();
+        }
+
+        function changeQuantity(cartKey, delta) {
+            const item = cart.find(item => item.cartKey === cartKey);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) { removeFromCart(cartKey); } 
+                else { updateCartUI(); }
+            }
+        }
+
+        function updateCartUI() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').innerText = totalItems;
+            document.getElementById('mobile-cart-count').innerText = totalItems;
+
+            const cartItemsContainer = document.getElementById('cart-items');
+            const emptyMsg = document.getElementById('empty-cart-msg');
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '';
+                if (emptyMsg) emptyMsg.style.display = 'block';
+                document.getElementById('cart-total').innerText = '฿0';
+            } else {
+                if (emptyMsg) emptyMsg.style.display = 'none';
+                cartItemsContainer.innerHTML = '';
+                let totalPrice = 0;
+
+                cart.forEach(item => {
+                    totalPrice += item.price * item.quantity;
+                    const sizeDisplay = item.size !== "Free size" ? `<p class="text-xs text-craft-500 mt-0.5">ตัวเลือก: ${item.size}</p>` : '';
+                    cartItemsContainer.innerHTML += `
+                        <div class="flex items-center gap-4 bg-white p-3 rounded-lg border border-craft-100 shadow-sm">
+                            <img src="${item.image}" alt="${item.name}" class="w-20 h-24 object-cover rounded-md">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-medium text-craft-800 line-clamp-1">${item.name}</h4>
+                                ${sizeDisplay}
+                                <p class="text-craft-600 text-sm mt-1 font-medium">${formatPrice(item.price)}</p>
+                                <div class="flex items-center justify-between mt-3">
+                                    <div class="flex items-center border border-craft-200 rounded-md">
+                                        <button onclick="changeQuantity('${item.cartKey}', -1)" class="px-2 py-1 text-craft-500 hover:text-craft-800 hover:bg-craft-50 rounded-l-md">-</button>
+                                        <span class="px-2 text-sm text-craft-800 w-8 text-center">${item.quantity}</span>
+                                        <button onclick="changeQuantity('${item.cartKey}', 1)" class="px-2 py-1 text-craft-500 hover:text-craft-800 hover:bg-craft-50 rounded-r-md">+</button>
+                                    </div>
+                                    <button onclick="removeFromCart('${item.cartKey}')" class="text-red-400 hover:text-red-600 text-sm p-1">ลบ</button>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+                document.getElementById('cart-total').innerText = formatPrice(totalPrice);
+            }
+        }
+
+        // --- Modals & Toggles ---
+        function toggleCart() {
+            const cartSidebar = document.getElementById('cart-sidebar');
+            const cartPanel = document.getElementById('cart-panel');
+            if (cartSidebar.classList.contains('hidden')) {
+                cartSidebar.classList.remove('hidden');
+                void cartPanel.offsetWidth;
+                cartPanel.classList.remove('translate-x-full');
+            } else {
+                cartPanel.classList.add('translate-x-full');
+                setTimeout(() => { cartSidebar.classList.add('hidden'); }, 300);
+            }
+        }
+
+        function openHowToOrder() {
+            const modal = document.getElementById('howto-modal');
+            const modalContent = document.getElementById('howto-modal-content');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => { modal.classList.remove('opacity-0'); modalContent.classList.remove('scale-95'); modalContent.classList.add('scale-100'); }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeHowToOrder() {
+            const modal = document.getElementById('howto-modal');
+            const modalContent = document.getElementById('howto-modal-content');
+            modal.classList.add('opacity-0'); modalContent.classList.remove('scale-100'); modalContent.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); document.body.style.overflow = 'auto'; }, 300);
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Initialize state
+        updateCartUI();
+        renderProducts();
+    </script>
+</body>
+</html>

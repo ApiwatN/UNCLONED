@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@theme {
+  --color-craft-50: #fdfbf7;
+  --color-craft-100: #f4ede4;
+  --color-craft-200: #e5d5c5;
+  --color-craft-300: #d1b69d;
+  --color-craft-400: #be9575;
+  --color-craft-500: #af7b56;
+  --color-craft-600: #a3664a;
+  --color-craft-700: #87513e;
+  --color-craft-800: #6f4436;
+  --color-craft-900: #5a382d;
+  
+  --font-sans: var(--font-prompt), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .animate-fade-in { 
+    animation: fadeIn 0.4s ease-in-out; 
+  }
+}
+
+@keyframes fadeIn { 
+  from { opacity: 0; transform: translateY(10px); } 
+  to { opacity: 1; transform: translateY(0); } 
+}
