@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar'
+import ProductGrid from '@/components/ProductGrid'
 import Link from 'next/link'
 import { Leaf, Scissors, Heart } from 'lucide-react'
 
@@ -58,7 +59,7 @@ export default function Home() {
           </div>
       </section>
       
-      {/* TODO: Shop component */}
+      <ProductGrid />
       
     </>
   )

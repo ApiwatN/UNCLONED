@@ -25,3 +25,13 @@ frontend
  ด้วย nextJS และหลังบ้าน NodeJS ใช้ supabase เป็น database
 ให้สร้างระบบหลังบ้าน เพื่ออัปโหลดและจัดการระบบ admin ด้วย
 วางแผนก่อนอย่าพึ่งแก้ code
+
+
+https://vercel.com/apiwatns-projects/uncloned
+
+
+git add .
+git commit -m "Initial commit: Next.js + Vercel Optimized + Media Setup"
+git branch -M main
+git remote add origin https://github.com/ApiwatN/UNCLONED.git
+git push -u origin main
