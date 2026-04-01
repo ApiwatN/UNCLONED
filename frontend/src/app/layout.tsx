@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="th" className={`${prompt.variable} scroll-smooth`}>
+    <html lang="th" className={`${prompt.variable}`} data-scroll-behavior="smooth">
       <body className={`font-sans antialiased bg-craft-50 text-craft-900 min-h-screen`}>
         {children}
         <CartSidebar />

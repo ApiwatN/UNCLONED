@@ -15,9 +15,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <Package className="w-5 h-5 text-craft-600" />
                 <span>คลังสินค้า (Products)</span>
             </Link>
-            <Link href="/admin/orders" className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-md font-medium transition-colors cursor-not-allowed opacity-50">
+            <Link href="/admin/orders" className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-md font-medium transition-colors">
                 <ShoppingCart className="w-5 h-5" />
-                <span>คำสั่งซื้อ (Coming Soon)</span>
+                <span>คำสั่งซื้อ (Orders)</span>
             </Link>
         </nav>
       </aside>

@@ -26,7 +26,7 @@ export async function POST(request: Request) {
             
         if (orderError) throw orderError;
         
-        // 2. Insert order items
+        // 2. Insert order items and Deduct Stock
         if (items && items.length > 0) {
             const orderItems = items.map((item: any) => ({
                 order_id: order.id,
@@ -37,6 +37,22 @@ export async function POST(request: Request) {
             
             const { error: itemsError } = await supabase.from('order_items').insert(orderItems);
             if (itemsError) throw itemsError;
+
+            // 3. ระบบตัดสต็อกอัตโนมัติ (Auto-Deduct Inventory)
+            for (const item of items) {
+                const { data: variant } = await supabase.from('product_variants').select('stock_quantity').eq('id', item.variant_id).single();
+                
+                if (variant) {
+                    if (variant.stock_quantity >= item.quantity) {
+                        // ปรับลดจำนวนสต็อกลงตามจำนวนที่ลูกค้าสั่ง หยิบของออกจากโกดังเว็บทันที!
+                        await supabase.from('product_variants').update({ stock_quantity: variant.stock_quantity - item.quantity }).eq('id', item.variant_id);
+                    } else {
+                        // ถ้าสต็อกไม่พอ ให้ลบออเดอร์ทิ้ง (Rollback) แล้วเด้งแจ้งลูกค้ารู้ตัว
+                        await supabase.from('orders').delete().eq('id', order.id);
+                        throw new Error(`ขออภัยครับ สินค้าที่คุณสั่งมีสต็อกไม่เพียงพอ`);
+                    }
+                }
+            }
         }
 
         return NextResponse.json({ success: true, orderId: order.id }, { status: 201 });
