@@ -1,9 +1,12 @@
 'use client'
 import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
 import useCartStore from '@/store/cartStore';
+import { useState } from 'react';
+import CheckoutModal from '@/components/CheckoutModal';
 
 export default function CartSidebar() {
   const { cart, isCartOpen, toggleCart, removeFromCart, changeQuantity } = useCartStore();
+  const [showCheckout, setShowCheckout] = useState(false);
   
   const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
@@ -71,12 +74,15 @@ export default function CartSidebar() {
               <span>ยอดรวมทั้งสิ้น</span>
               <span className="text-xl">฿{total.toLocaleString()}</span>
             </div>
-            <button className="w-full bg-craft-800 text-white py-4 rounded-md font-medium hover:bg-craft-900 shadow-md transform active:scale-[0.98] transition-all">
+            <button onClick={() => setShowCheckout(true)} className="w-full bg-craft-800 text-white py-4 rounded-md font-medium hover:bg-craft-900 shadow-md transform active:scale-[0.98] transition-all">
               ดำเนินการชำระเงิน
             </button>
           </div>
         )}
       </div>
+      
+      {/* Pop up Checkout Modal */}
+      <CheckoutModal isOpen={showCheckout} onClose={() => setShowCheckout(false)} />
     </>
   );
 }

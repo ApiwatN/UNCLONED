@@ -36,6 +36,11 @@
       "sourceType": "github",
       "computedHash": "3a0481591523c55ecfe2569b6b28b2dcbfa3742367667697219d29170981ad53"
     },
+    "e-commerce-retail": {
+      "source": "dylantarre/animation-principles",
+      "sourceType": "github",
+      "computedHash": "30f664bb02feaf1c87d0d98485f4093c231a1530a5098cd5c05062a3d273c201"
+    },
     "frontend-design": {
       "source": "anthropics/skills",
       "sourceType": "github",
