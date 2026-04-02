@@ -1,10 +1,14 @@
+'use client'
 import Navbar from '@/components/Navbar'
 import ProductGrid from '@/components/ProductGrid'
 import HeroCarousel from '@/components/HeroCarousel'
 import Link from 'next/link'
 import { Leaf, Scissors, Heart } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function Home() {
+  const { lang } = useLanguage()
+  
   return (
     <>
       <Navbar />
@@ -16,19 +20,23 @@ export default function Home() {
             
             {/* Left Column: Text */}
             <div className="max-w-2xl">
-              <span className="text-craft-500 font-medium tracking-wider text-sm uppercase mb-4 block animate-fade-in">Handcrafted with love</span>
+              <span className="text-craft-500 font-medium tracking-wider text-sm uppercase mb-4 block animate-fade-in">{lang === 'en' ? 'Handcrafted with love' : 'ทำด้วยใจ'}</span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-craft-900 leading-tight mb-6 animate-fade-in" style={{animationDelay: '0.1s'}}>
-                ความเรียบง่าย<br/>ที่ถักทอด้วยความใส่ใจ
+                {lang === 'en' ? (
+                  <>Simplicity<br/>woven with care</>
+                ) : (
+                  <>ความเรียบง่าย<br/>ที่ถักทอด้วยความใส่ใจ</>
+                )}
               </h1>
               <p className="text-lg text-craft-600 mb-8 max-w-lg leading-relaxed animate-fade-in" style={{animationDelay: '0.2s'}}>
-                เสื้อผ้าฝ้ายและลินินธรรมชาติ ตัดเย็บด้วยมือทุกชิ้น ออกแบบมาเพื่อความสวมใส่สบาย มินิมอล และเป็นมิตรกับสิ่งแวดล้อมโดย UNCLONED
+                {lang === 'en' ? 'Natural cotton and linen clothing. Every piece is handcrafted, designed for comfort, minimal, and eco-friendly by UNCLONED.' : 'เสื้อผ้าฝ้ายและลินินธรรมชาติ ตัดเย็บด้วยมือทุกชิ้น ออกแบบมาเพื่อความสวมใส่สบาย มินิมอล และเป็นมิตรกับสิ่งแวดล้อมโดย UNCLONED'}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{animationDelay: '0.3s'}}>
-                <Link href="#shop" className="bg-craft-800 hover:bg-black text-white px-8 py-3 rounded-md text-center transition-colors font-medium shadow-lg">
-                  เลือกชมสินค้า
+                <Link href="#shop" className="bg-craft-800 hover:bg-black text-white px-8 py-3 rounded-md text-center transition-all duration-200 font-medium shadow-lg hover:shadow-xl active:scale-95 focus:ring-4 focus:ring-craft-200">
+                  {lang === 'en' ? 'Shop Now' : 'เลือกชมสินค้า'}
                 </Link>
-                <Link href="#story" className="border border-craft-400 text-craft-800 hover:bg-craft-200 px-8 py-3 rounded-md text-center transition-colors font-medium">
-                  เรื่องราวของเรา
+                <Link href="#story" className="border border-craft-400 text-craft-800 hover:bg-craft-200 px-8 py-3 rounded-md text-center transition-all duration-200 font-medium active:scale-95 focus:ring-4 focus:ring-craft-100">
+                  {lang === 'en' ? 'Our Story' : 'เรื่องราวของเรา'}
                 </Link>
               </div>
             </div>
@@ -47,8 +55,8 @@ export default function Home() {
                   <Scissors className="w-6 h-6" />
                 </div>
                 <div className="pr-2">
-                  <p className="text-xs text-craft-500 font-semibold tracking-wide">ทำด้วยใจ</p>
-                  <p className="text-sm text-craft-900 font-bold tracking-wider">100% งานแฮนด์เมด</p>
+                  <p className="text-xs text-craft-500 font-semibold tracking-wide">{lang === 'en' ? 'Made with heart' : 'ทำด้วยใจ'}</p>
+                  <p className="text-sm text-craft-900 font-bold tracking-wider">{lang === 'en' ? '100% Handmade' : '100% งานแฮนด์เมด'}</p>
                 </div>
               </div>
             </div>
@@ -63,18 +71,18 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                   <div className="p-4">
                       <Leaf className="h-8 w-8 mx-auto text-craft-600 mb-4" />
-                      <h3 className="text-lg font-medium text-craft-800 mb-2">เส้นใยธรรมชาติ</h3>
-                      <p className="text-craft-600 text-sm">เราเลือกใช้เฉพาะผ้าฝ้ายและผ้าลินินแท้ 100% ระบายอากาศได้ดี</p>
+                      <h3 className="text-lg font-medium text-craft-800 mb-2">{lang === 'en' ? 'Natural Fibers' : 'เส้นใยธรรมชาติ'}</h3>
+                      <p className="text-craft-600 text-sm">{lang === 'en' ? 'We use 100% authentic cotton and linen for breathability.' : 'เราเลือกใช้เฉพาะผ้าฝ้ายและผ้าลินินแท้ 100% ระบายอากาศได้ดี'}</p>
                   </div>
                   <div className="p-4">
                       <Scissors className="h-8 w-8 mx-auto text-craft-600 mb-4" />
-                      <h3 className="text-lg font-medium text-craft-800 mb-2">ตัดเย็บด้วยมือ</h3>
-                      <p className="text-craft-600 text-sm">ใส่ใจในทุกฝีเข็มโดยช่างฝีมือผู้ชำนาญ ผลิตจำนวนจำกัด</p>
+                      <h3 className="text-lg font-medium text-craft-800 mb-2">{lang === 'en' ? 'Handcrafted' : 'ตัดเย็บด้วยมือ'}</h3>
+                      <p className="text-craft-600 text-sm">{lang === 'en' ? 'Sewn by local craftsmen with limited production.' : 'ใส่ใจในทุกฝีเข็มโดยช่างฝีมือผู้ชำนาญ ผลิตจำนวนจำกัด'}</p>
                   </div>
                   <div className="p-4">
                       <Heart className="h-8 w-8 mx-auto text-craft-600 mb-4" />
-                      <h3 className="text-lg font-medium text-craft-800 mb-2">มินิมอลดีไซน์</h3>
-                      <p className="text-craft-600 text-sm">ออกแบบให้เรียบง่าย สวมใส่ได้ทุกโอกาส และไม่มีวันตกยุค</p>
+                      <h3 className="text-lg font-medium text-craft-800 mb-2">{lang === 'en' ? 'Minimal Design' : 'มินิมอลดีไซน์'}</h3>
+                      <p className="text-craft-600 text-sm">{lang === 'en' ? 'Timeless pieces, easy to wear for any occasion.' : 'ออกแบบให้เรียบง่าย สวมใส่ได้ทุกโอกาส และไม่มีวันตกยุค'}</p>
                   </div>
               </div>
           </div>
@@ -93,14 +101,23 @@ export default function Home() {
                     <div className="absolute -bottom-8 -right-8 w-64 h-64 bg-craft-200 rounded-full mix-blend-multiply filter blur-3xl opacity-70 z-0"></div>
                 </div>
                 <div className="w-full lg:w-7/12 space-y-8">
-                    <h2 className="text-4xl lg:text-5xl font-bold text-craft-900 leading-tight">เสื้อผ้าคือภาษา<br/><span className="text-craft-500 font-light italic text-3xl">ที่สะท้อนตัวตนของคุณ</span></h2>
+                    <h2 className="text-4xl lg:text-5xl font-bold text-craft-900 leading-tight">
+                        {lang === 'en' ? (
+                            <>Clothing is a language<br/><span className="text-craft-500 font-light italic text-3xl">that reflects your soul</span></>
+                        ) : (
+                            <>เสื้อผ้าคือภาษา<br/><span className="text-craft-500 font-light italic text-3xl">ที่สะท้อนตัวตนของคุณ</span></>
+                        )}
+                    </h2>
                     
                     <div className="space-y-6 text-lg text-craft-700 leading-relaxed font-light">
-                        <p>จุดเริ่มต้นของ <strong className="font-bold">UNCLONED</strong> ไม่ใช่เพียงแค่ธุรกิจ แต่เกิดจากความหลงใหลในพื้นผิวธรรมชาติของเส้นใยฝ้ายและลินิน เราเชื่อว่าผ้าที่มาจากธรรมชาตินั้นมี <span className="italic">"ลมหายใจ"</span> ยิ่งสวมใส่ยิ่งสะท้อนตัวตน ยิ่งซักยิ่งนุ่มนวล</p>
+                        <p>{lang === 'en' ? 'The beginning of ' : 'จุดเริ่มต้นของ '}<strong className="font-bold">UNCLONED</strong> 
+                        {lang === 'en' ? 
+                          ' is not just a business, but born from the passion for natural textures. We believe that natural fabrics have "breath". The more you wear them, the more they reflect you. The more you wash them, the softer they get.' 
+                          : ' ไม่ใช่เพียงแค่ธุรกิจ แต่เกิดจากความหลงใหลในพื้นผิวธรรมชาติของเส้นใยฝ้ายและลินิน เราเชื่อว่าผ้าที่มาจากธรรมชาตินั้นมี "ลมหายใจ" ยิ่งสวมใส่ยิ่งสะท้อนตัวตน ยิ่งซักยิ่งนุ่มนวล'}</p>
                         
-                        <p>เราขอปฏิเสธระบบ Fast Fashion และหันกลับมาโอบกอดรากเหง้าของงานฝีมือ เสื้อผ้าทุกชิ้นของเราไม่ได้ถูกโคลนนิ่งออกมาจากเครื่องจักรหน้าตาเหมือนกันทีละหมื่นตัว แต่ถูกวาด ตัด และเย็บทีละตัวด้วยสองมือของช่างฝีมือในท้องถิ่นที่ใส่ใจในทุกฝีเข็ม</p>
+                        <p>{lang === 'en' ? 'We reject the Fast Fashion system and embrace the roots of craftsmanship. Every piece of our clothing is not cloned by machines by the thousands, but drawn, cut, and sewn individually by local artisans who care about every stitch.' : 'เราขอปฏิเสธระบบ Fast Fashion และหันกลับมาโอบกอดรากเหง้าของงานฝีมือ เสื้อผ้าทุกชิ้นของเราไม่ได้ถูกโคลนนิ่งออกมาจากเครื่องจักรหน้าตาเหมือนกันทีละหมื่นตัว แต่ถูกวาด ตัด และเย็บทีละตัวด้วยสองมือของช่างฝีมือในท้องถิ่นที่ใส่ใจในทุกฝีเข็ม'}</p>
                         
-                        <p>เมื่อคุณสวมใส่ UNCLONED คุณไม่ได้แค่กำลังใส่เสื้อผ้า แต่คุณกำลังสวมใส่งานศิลปะที่เป็นมิตรกับสิ่งแวดล้อม และสนับสนุนรายได้ให้ช่างฝีมือตัวเล็กๆ ไปพร้อมกัน</p>
+                        <p>{lang === 'en' ? 'When you wear UNCLONED, you are not just wearing clothes. You are wearing sustainable art and supporting the livelihood of local makers directly.' : 'เมื่อคุณสวมใส่ UNCLONED คุณไม่ได้แค่กำลังใส่เสื้อผ้า แต่คุณกำลังสวมใส่งานศิลปะที่เป็นมิตรกับสิ่งแวดล้อม และสนับสนุนรายได้ให้ช่างฝีมือตัวเล็กๆ ไปพร้อมกัน'}</p>
                     </div>
                     
                     <div className="pt-6 flex items-center space-x-5 border-t border-craft-100">
@@ -124,12 +141,14 @@ export default function Home() {
                 UN<span className="font-light">CLONED</span>
                 <span className="block h-0.5 w-1/2 bg-craft-600 mt-2"></span>
               </h3>
-              <p className="text-craft-300 max-w-sm mb-6 pb-2 leading-relaxed">งานคราฟต์ที่ออกแบบมาเพื่อให้คุณได้เป็นตัวเอง ไม่ต้องเหมือนใคร และเป็นมิตรกับโลกของเรา</p>
+              <p className="text-craft-300 max-w-sm mb-6 pb-2 leading-relaxed">
+                  {lang === 'en' ? 'Crafts designed for you to be yourself, unique, and friendly to our planet.' : 'งานคราฟต์ที่ออกแบบมาเพื่อให้คุณได้เป็นตัวเอง ไม่ต้องเหมือนใคร และเป็นมิตรกับโลกของเรา'}
+              </p>
               <div className="flex space-x-4">
                   {/* Social Circles */}
-                  <div className="w-10 h-10 rounded-full bg-craft-800 flex items-center justify-center hover:bg-craft-600 transition-colors cursor-pointer text-white">IG</div>
-                  <div className="w-10 h-10 rounded-full bg-craft-800 flex items-center justify-center hover:bg-craft-600 transition-colors cursor-pointer text-white">FB</div>
-                  <div className="w-10 h-10 rounded-full bg-craft-800 flex items-center justify-center hover:bg-craft-600 transition-colors cursor-pointer text-white">LINE</div>
+                  <div className="w-10 h-10 rounded-full bg-craft-800 flex items-center justify-center hover:bg-craft-600 active:scale-95 transition-all duration-200 cursor-pointer text-white">IG</div>
+                  <div className="w-10 h-10 rounded-full bg-craft-800 flex items-center justify-center hover:bg-craft-600 active:scale-95 transition-all duration-200 cursor-pointer text-white">FB</div>
+                  <div className="w-10 h-10 rounded-full bg-craft-800 flex items-center justify-center hover:bg-craft-600 active:scale-95 transition-all duration-200 cursor-pointer text-white">LINE</div>
               </div>
             </div>
             
@@ -143,11 +162,11 @@ export default function Home() {
             </div>
             
             <div className="md:col-span-3">
-              <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">ช่วยเหลือ</h4>
+              <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">{lang === 'en' ? 'Help' : 'ช่วยเหลือ'}</h4>
               <ul className="space-y-4">
-                <li><a href="#shop" className="text-craft-400 hover:text-white transition-colors font-light">สินค้าทั้งหมด / เลือกซื้อ</a></li>
-                <li><a href="#story" className="text-craft-400 hover:text-white transition-colors font-light">เรื่องราวของเรา</a></li>
-                <li><a href="#" className="text-craft-400 hover:text-white transition-colors font-light">ติดต่อเคลมสินค้า</a></li>
+                <li><a href="#shop" className="text-craft-400 hover:text-white transition-colors font-light">{lang === 'en' ? 'All Products' : 'สินค้าทั้งหมด / เลือกซื้อ'}</a></li>
+                <li><a href="#story" className="text-craft-400 hover:text-white transition-colors font-light">{lang === 'en' ? 'Our Story' : 'เรื่องราวของเรา'}</a></li>
+                <li><a href="#" className="text-craft-400 hover:text-white transition-colors font-light">{lang === 'en' ? 'Contact & Claims' : 'ติดต่อเคลมสินค้า'}</a></li>
               </ul>
             </div>
           </div>

@@ -51,13 +51,13 @@ export default function HeroCarousel() {
             <div className="absolute inset-0 flex items-center justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 pointer-events-none">
                 <button 
                     onClick={() => setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)}
-                    className="pointer-events-auto bg-white/30 hover:bg-white/60 backdrop-blur-sm text-craft-900 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+                    className="pointer-events-auto bg-white/30 hover:bg-white/60 backdrop-blur-sm text-craft-900 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90"
                 >
                     &#8592;
                 </button>
                 <button 
                     onClick={() => setCurrentIndex((prev) => (prev + 1) % images.length)}
-                    className="pointer-events-auto bg-white/30 hover:bg-white/60 backdrop-blur-sm text-craft-900 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+                    className="pointer-events-auto bg-white/30 hover:bg-white/60 backdrop-blur-sm text-craft-900 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90"
                 >
                     &#8594;
                 </button>

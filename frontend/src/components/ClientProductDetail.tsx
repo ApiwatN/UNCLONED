@@ -2,12 +2,14 @@
 import { useState, useEffect } from 'react';
 import { ShoppingBag, ShieldCheck, Undo2, Truck, Plus, Minus, Check, PlayCircle } from 'lucide-react';
 import useCartStore from '@/store/cartStore';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function ClientProductDetail({ product }: { product: any }) {
     const { addToCart, toggleCart } = useCartStore();
     const [selectedVariant, setSelectedVariant] = useState<any>(null);
     const [quantity, setQuantity] = useState(1);
     const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+    const { lang } = useLanguage();
 
     useEffect(() => {
         if (product?.product_variants) {
@@ -82,15 +84,15 @@ export default function ClientProductDetail({ product }: { product: any }) {
                 
                 {/* Header Info */}
                 <h3 className="text-sm font-bold text-craft-500 tracking-widest uppercase mb-2">HANDCRAFTED {product.category}</h3>
-                <h1 className="text-3xl lg:text-4xl font-bold text-craft-900 mb-4 leading-tight">{product.name}</h1>
+                <h1 className="text-3xl lg:text-4xl font-bold text-craft-900 mb-4 leading-tight">{lang === 'en' ? (product.name_en || product.name) : product.name}</h1>
                 <p className="text-3xl font-medium text-craft-800 mb-6 border-b border-craft-100 pb-6">฿{displayPrice.toLocaleString()}</p>
 
                 {/* ส่วนการเลือกไซส์และจำนวน */}
                 <div className="bg-white rounded-2xl shadow-[0_2px_40px_-15px_rgba(0,0,0,0.1)] p-6 mb-8 border border-craft-50 border-t border-l border-white bg-gradient-to-br from-white to-craft-50/30">
                     <div className="mb-6">
                         <div className="flex justify-between items-center mb-3">
-                            <label className="text-sm font-semibold text-gray-800">เลือกแบบ/ไซส์</label>
-                            <a href="#size-guide" className="text-xs text-craft-600 underline font-medium">ดูคู่มือขนาด</a>
+                            <label className="text-sm font-semibold text-gray-800">{lang === 'en' ? 'Select Size' : 'เลือกแบบ/ไซส์'}</label>
+                            <a href="#size-guide" className="text-xs text-craft-600 underline font-medium hover:text-craft-900 transition-colors">{lang === 'en' ? 'Size Guide' : 'ดูคู่มือขนาด'}</a>
                         </div>
                         <div className="flex flex-wrap gap-2.5">
                             {product.product_variants?.map((v: any) => {
@@ -101,7 +103,7 @@ export default function ClientProductDetail({ product }: { product: any }) {
                                         key={v.id}
                                         disabled={outOfStock}
                                         onClick={() => { setSelectedVariant(v); setQuantity(1); }}
-                                        className={`px-5 py-3 rounded-lg border text-sm font-bold transition-all ${outOfStock ? 'opacity-40 cursor-not-allowed bg-gray-50 border-gray-200 text-gray-400' : isSelected ? 'border-craft-900 bg-craft-900 text-white shadow-md transform scale-[1.02]' : 'border-gray-300 text-gray-700 hover:border-craft-400 bg-white'}`}
+                                        className={`px-5 py-3 rounded-lg border text-sm font-bold transition-all active:scale-95 duration-200 ${outOfStock ? 'opacity-40 cursor-not-allowed bg-gray-50 border-gray-200 text-gray-400' : isSelected ? 'border-craft-900 bg-craft-900 text-white shadow-md transform scale-[1.02]' : 'border-gray-300 text-gray-700 hover:border-craft-400 bg-white'}`}
                                     >
                                         {v.size} {v.additional_price > 0 ? `(+฿${v.additional_price})` : ''}
                                     </button>
@@ -112,7 +114,12 @@ export default function ClientProductDetail({ product }: { product: any }) {
 
                     {selectedVariant && (
                         <div className="mb-8">
-                            <label className="text-sm font-semibold text-gray-800 mb-3 block">จำนวนสินค้า <span className="text-xs font-normal text-gray-500 ml-2">(คงเหลือ {selectedVariant.stock_quantity} ชิ้น)</span></label>
+                            <label className="text-sm font-semibold text-gray-800 mb-3 block">
+                                {lang === 'en' ? 'Quantity' : 'จำนวนสินค้า'} 
+                                <span className="text-xs font-normal text-gray-500 ml-2">
+                                    {lang === 'en' ? `(${selectedVariant.stock_quantity} available)` : `(คงเหลือ ${selectedVariant.stock_quantity} ชิ้น)`}
+                                </span>
+                            </label>
                             <div className="flex items-center w-max border border-gray-300 rounded-lg overflow-hidden h-12 bg-white">
                                 <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-12 h-full bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"><Minus className="w-4 h-4" /></button>
                                 <span className="w-16 text-center font-bold text-lg text-gray-800">{quantity}</span>
@@ -124,24 +131,24 @@ export default function ClientProductDetail({ product }: { product: any }) {
                     <button 
                         disabled={!selectedVariant}
                         onClick={handleAddToCart}
-                        className="w-full bg-craft-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-black transition-all flex items-center justify-center shadow-xl shadow-craft-900/20 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-[0.98]"
+                        className="w-full bg-craft-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-black transition-all duration-200 flex items-center justify-center shadow-xl shadow-craft-900/20 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.01] active:scale-[0.98]"
                     >
                         <ShoppingBag className="w-5 h-5 mr-3 mb-0.5" />
-                        หยิบใส่ตะกร้าเลย
+                        {lang === 'en' ? 'Add to Cart' : 'หยิบใส่ตะกร้าเลย'}
                     </button>
 
                     <div className="grid grid-cols-3 gap-2 mt-6 border-t border-craft-100 pt-6">
                         <div className="flex flex-col items-center justify-center text-center p-2">
                             <Truck className="w-5 h-5 text-gray-400 mb-1.5" />
-                            <span className="text-[10px] text-gray-500 font-medium">จัดส่งรวดเร็ว<br/>ทั่วประเทศ</span>
+                            <span className="text-[10px] text-gray-500 font-medium">{lang === 'en' ? <>Fast Delivery<br/>Nationwide</> : <>จัดส่งรวดเร็ว<br/>ทั่วประเทศ</>}</span>
                         </div>
                         <div className="flex flex-col items-center justify-center text-center p-2 border-l border-r border-craft-100">
                             <Undo2 className="w-5 h-5 text-gray-400 mb-1.5" />
-                            <span className="text-[10px] text-gray-500 font-medium">เปลี่ยนไซส์ได้<br/>ภายใน 7 วัน</span>
+                            <span className="text-[10px] text-gray-500 font-medium">{lang === 'en' ? <>7-Day<br/>Size Exchange</> : <>เปลี่ยนไซส์ได้<br/>ภายใน 7 วัน</>}</span>
                         </div>
                         <div className="flex flex-col items-center justify-center text-center p-2">
                             <ShieldCheck className="w-5 h-5 text-gray-400 mb-1.5" />
-                            <span className="text-[10px] text-gray-500 font-medium">รับประกันคุณภาพ<br/>สินค้าแฮนด์เมด</span>
+                            <span className="text-[10px] text-gray-500 font-medium">{lang === 'en' ? <>Handmade<br/>Quality</> : <>รับประกันคุณภาพ<br/>สินค้าแฮนด์เมด</>}</span>
                         </div>
                     </div>
                 </div>
@@ -151,61 +158,67 @@ export default function ClientProductDetail({ product }: { product: any }) {
                     
                     <div>
                         <h4 className="flex items-center text-lg font-bold text-craft-900 mb-4 border-b border-craft-100 pb-2">
-                            <span className="bg-craft-100 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">✦</span> เรื่องราวของชุดนี้ (Story)
+                            <span className="bg-craft-100 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">✦</span> {lang === 'en' ? 'The Story' : 'เรื่องราวของชุดนี้ (Story)'}
                         </h4>
-                        <p className="pl-11 text-sm md:text-base text-gray-600">{product.description || 'ออกแบบมาเพื่อวันสบายๆ ที่ยังต้องการความดูดี ตัดเย็บด้วยความใส่ใจจากช่างฝีมือในสตูดิโอเล็กๆ ของเรา เรียบง่ายแต่แฝงไปด้วยรายละเอียด พรางหุ่นและระบายอากาศได้ดีเยี่ยม'}</p>
+                        <p className="pl-11 text-sm md:text-base text-gray-600 whitespace-pre-line">
+                            {lang === 'en' 
+                                ? (product.description_en || product.description || 'Designed for casual days that still demand a good look. Meticulously cut and sewn by artisans in our small studio.')
+                                : (product.description || 'ออกแบบมาเพื่อวันสบายๆ ที่ยังต้องการความดูดี ตัดเย็บด้วยความใส่ใจจากช่างฝีมือในสตูดิโอเล็กๆ ของเรา')}
+                        </p>
                     </div>
 
                     <div>
                         <h4 className="flex items-center text-lg font-bold text-craft-900 mb-4 border-b border-craft-100 pb-2">
-                            <span className="bg-craft-100 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">✦</span> วัสดุและเนื้อผ้า (Material)
+                            <span className="bg-craft-100 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">✦</span> {lang === 'en' ? 'Materials' : 'วัสดุและเนื้อผ้า (Material)'}
                         </h4>
-                        <ul className="pl-11 space-y-2 text-sm md:text-base text-gray-600 list-disc ml-5">
-                            <li>ผ้าฝ้ายลินินผสม (Premium Natural Linen 100%)</li>
-                            <li>เนื้อผ้ามีเท็กซ์เจอร์ยับเป็นธรรมชาติ ยิ่งซักยิ่งนุ่ม โปร่งสบายไม่ร้อน</li>
-                            <li>มีซับในกระโปรงทำจากผ้าคอตตอนเนื้อบาง (ไม่ต้องกลัวโป๊แน่นอนค่ะ)</li>
-                        </ul>
+                        <div className="pl-11 space-y-2 text-sm md:text-base text-gray-600 whitespace-pre-line">
+                            {lang === 'en' 
+                                ? (product.material_en || 'Premium Natural Linen 100% Blend\nNatural crinkle texture, gets softer with every wash, highly breathable\nInner lining made of thin cotton (safe from see-throughs)')
+                                : (product.material_th || 'ผ้าฝ้ายลินินผสม (Premium Natural Linen 100%)\nเนื้อผ้ามีเท็กซ์เจอร์ยับเป็นธรรมชาติ ยิ่งซักยิ่งนุ่ม โปร่งสบายไม่ร้อน\nมีซับในกระโปรงทำจากผ้าคอตตอนเนื้อบาง (ไม่ต้องกลัวโป๊แน่นอนค่ะ)')}
+                        </div>
                     </div>
 
                     <div id="size-guide">
                         <h4 className="flex items-center text-lg font-bold text-craft-900 mb-4 border-b border-craft-100 pb-2">
-                            <span className="bg-craft-100 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">✦</span> ขนาดและสัดส่วน (Size Guide)
+                            <span className="bg-craft-100 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">✦</span> {lang === 'en' ? 'Size Guide' : 'ขนาดและสัดส่วน (Size Guide)'}
                         </h4>
                         <div className="pl-11 space-y-3 text-sm md:text-base text-gray-600">
                             {product.product_variants && product.product_variants.length > 0 ? (
                                 product.product_variants.map((v: any) => (
                                     <div key={v.id} className="bg-craft-50 p-2.5 rounded-lg border border-craft-100">
-                                        <span className="font-bold text-craft-800">Size {v.size} :</span> {product.category === 'bottoms' ? 'เอว 26-34" | สะโพก 40" | ความยาว 38"' : 'อก 34-38" | เอว 28-32" | ความยาว 42"'}
+                                        <span className="font-bold text-craft-800">Size {v.size} :</span> {product.category === 'bottoms' ? (lang === 'en' ? 'Waist 26-34" | Hips 40" | Length 38"' : 'เอว 26-34" | สะโพก 40" | ความยาว 38"') : (lang === 'en' ? 'Chest 34-38" | Waist 28-32" | Length 42"' : 'อก 34-38" | เอว 28-32" | ความยาว 42"')}
                                     </div>
                                 ))
                             ) : (
-                                <div className="bg-craft-50 p-2.5 rounded-lg border border-craft-100"><span className="font-bold text-craft-800">Free Size :</span> อก 32-40" | เอว 26-34" | ความยาว 42"</div>
+                                <div className="bg-craft-50 p-2.5 rounded-lg border border-craft-100"><span className="font-bold text-craft-800">Free Size :</span> {lang === 'en' ? 'Chest 32-40" | Waist 26-34" | Length 42"' : 'อก 32-40" | เอว 26-34" | ความยาว 42"'}</div>
                             )}
-                            <p className="mt-4 italic text-sm">(มีเชือกผูกเอวเย็บติดด้านข้าง สามารถผูกปรับให้เข้ารูปได้ตามต้องการ)</p>
-                            <div className="mt-3 bg-gray-50 border border-gray-100 rounded-lg p-3 inline-block">
-                                👤 <strong>นางแบบในรูป:</strong> สูง 165 ซม. อก 32" เอว 25" สะโพก 35" ใส่ไซส์ S/Free Size ค่ะ
+                            <p className="mt-4 italic text-sm">{lang === 'en' ? '(Comes with side ties to adjust the fit to your liking)' : '(มีเชือกผูกเอวเย็บติดด้านข้าง สามารถผูกปรับให้เข้ารูปได้ตามต้องการ)'}</p>
+                            <div className="mt-3 bg-gray-50 border border-gray-100 rounded-lg p-3 inline-block whitespace-pre-line">
+                                👤 <strong>{lang === 'en' ? 'Model Details:' : 'นางแบบในรูป:'}</strong> {lang === 'en' ? (product.model_info_en || 'Height 165cm, Chest 32", Waist 25", Hips 35". Wearing size S/Free Size.') : (product.model_info_th || 'สูง 165 ซม. อก 32" เอว 25" สะโพก 35" ใส่ไซส์ S/Free Size ค่ะ')}
                             </div>
                         </div>
                     </div>
 
                     <div>
                         <h4 className="flex items-center text-lg font-bold text-craft-900 mb-4 border-b border-craft-100 pb-2">
-                            <span className="bg-craft-100 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">✦</span> การดูแลรักษา (Care)
+                            <span className="bg-craft-100 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">✦</span> {lang === 'en' ? 'Care Instructions' : 'การดูแลรักษา (Care)'}
                         </h4>
-                        <ul className="pl-11 space-y-2 text-sm md:text-base text-gray-600 list-disc ml-5">
-                            <li>แนะนำให้ซักมือเพื่อถนอมใยผ้า หรือใส่ถุงตาข่ายซักเครื่องโหมดถนอมผ้า (น้ำเย็น)</li>
-                            <li>สะบัดให้หมาดแล้วตากในที่ร่ม (หลีกเลี่ยงแดดจัดเพื่อรักษาสีผ้าให้สวยคงทน)</li>
-                            <li>รีดด้วยไฟกลาง-สูง หรือปล่อยให้ยับนิดๆ เพื่อความเป็นธรรมชาติของผ้าลินิน</li>
-                            <li className="text-red-500/80">สีอาจตกในการซัก 1-2 ครั้งแรก ควรแยกซัก</li>
-                        </ul>
+                        <div className="pl-11 space-y-2 text-sm md:text-base text-gray-600 whitespace-pre-line">
+                            {lang === 'en' 
+                                ? (product.care_en || 'Hand wash recommended to preserve fabric, or use machine wash on delicate cycle (cold water) in a mesh bag.\nShake out gently and dry in the shade.\nIron on medium-high or leave slightly wrinkled for a natural linen look.\nColors may bleed slightly in the first 1-2 washes.')
+                                : (product.care_th || 'แนะนำให้ซักมือเพื่อถนอมใยผ้า หรือใส่ถุงตาข่ายซักเครื่องโหมดถนอมผ้า (น้ำเย็น)\nสะบัดให้หมาดแล้วตากในที่ร่ม\nรีดด้วยไฟกลาง-สูง หรือปล่อยให้ยับนิดๆ เพื่อความเป็นธรรมชาติของผ้าลินิน\nสีอาจตกในการซัก 1-2 ครั้งแรก ควรแยกซัก')}
+                        </div>
                     </div>
 
                     <div>
                         <h4 className="flex items-center text-lg font-bold text-craft-900 mb-4 border-b border-craft-100 pb-2">
-                            <span className="bg-craft-100 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">✦</span> การจัดส่ง & เปลี่ยนคืน
+                            <span className="bg-craft-100 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">✦</span> {lang === 'en' ? 'Shipping & Returns' : 'การจัดส่ง & เปลี่ยนคืน'}
                         </h4>
-                        <p className="pl-11 text-sm md:text-base text-gray-600 mb-2"><strong>สถานะสินค้า:</strong> งานสั่งตัดประณีต (Made to Order) ใช้เวลาตัดเย็บ 5-7 วันทำการตามคิว</p>
-                        <p className="pl-11 text-sm md:text-base text-gray-600"><strong>Return Policy:</strong> รับเปลี่ยนไซส์ภายใน 7 วันหลังได้รับสินค้า (มีค่าส่งกลับ 50 บาท) <br/>*งานสั่งตัดแก้ไขไซส์พิเศษ ขอสงวนสิทธิ์ไม่รับเปลี่ยนคืน</p>
+                        <div className="pl-11 text-sm md:text-base text-gray-600 whitespace-pre-line">
+                            {lang === 'en' 
+                                ? (product.shipping_en || 'Status: Made to Order. Handcrafting takes 5-7 business days.\nReturn Policy: Exchanges available within 7 days of receipt.\n*Custom-tailored sizes are non-exchangeable/refundable.')
+                                : (product.shipping_th || 'สถานะสินค้า: งานสั่งตัดประณีต (Made to Order) ใช้เวลาตัดเย็บ 5-7 วันทำการตามคิว\nReturn Policy: รับเปลี่ยนไซส์ภายใน 7 วันหลังได้รับสินค้า (มีค่าส่งกลับ 50 บาท)\n*งานสั่งตัดแก้ไขไซส์พิเศษ ขอสงวนสิทธิ์ไม่รับเปลี่ยนคืน')}
+                        </div>
                     </div>
                 </div>
 

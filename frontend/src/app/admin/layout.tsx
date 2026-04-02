@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Package, ShoppingCart } from 'lucide-react';
+import { Package, ShoppingCart, BarChart } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -18,6 +18,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <Link href="/admin/orders" className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-md font-medium transition-colors">
                 <ShoppingCart className="w-5 h-5" />
                 <span>คำสั่งซื้อ (Orders)</span>
+            </Link>
+            <Link href="/admin/analytics" className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-md font-medium transition-colors">
+                <BarChart className="w-5 h-5" />
+                <span>วิเคราะห์ข้อมูล (Analytics)</span>
             </Link>
         </nav>
       </aside>

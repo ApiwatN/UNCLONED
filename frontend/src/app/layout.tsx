@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Prompt } from 'next/font/google'
 import CartSidebar from '@/components/CartSidebar'
 import { Analytics } from '@vercel/analytics/react'
+import { LanguageProvider } from '@/contexts/LanguageContext'
 import './globals.css'
 
 const prompt = Prompt({
@@ -87,8 +88,10 @@ export default function RootLayout({
         />
       </head>
       <body className={`font-sans antialiased bg-craft-50 text-craft-900 min-h-screen`}>
-        {children}
-        <CartSidebar />
+        <LanguageProvider>
+          {children}
+          <CartSidebar />
+        </LanguageProvider>
         <Analytics />
       </body>
     </html>

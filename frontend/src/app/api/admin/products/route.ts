@@ -8,12 +8,18 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { name, description, category, base_price, image_url, video_url, variants } = body;
+        const { 
+            name, name_en, description, description_en, category, base_price, image_url, video_url, variants,
+            material_th, material_en, care_th, care_en, shipping_th, shipping_en, model_info_th, model_info_en 
+        } = body;
         
         // 1. Insert product
         const { data: product, error: pError } = await supabase
             .from('products')
-            .insert([{ name, description, category, base_price, image_url, video_url }])
+            .insert([{ 
+                name, name_en, description, description_en, category, base_price, image_url, video_url,
+                material_th, material_en, care_th, care_en, shipping_th, shipping_en, model_info_th, model_info_en 
+            }])
             .select()
             .single();
             
@@ -40,17 +46,40 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
     try {
         const body = await request.json();
-        const { id, name, description, category, base_price, image_url, video_url } = body;
+        const { 
+            id, name, name_en, description, description_en, category, base_price, image_url, video_url,
+            material_th, material_en, care_th, care_en, shipping_th, shipping_en, model_info_th, model_info_en
+        } = body;
         if (!id) return NextResponse.json({ error: 'Missing product ID' }, { status: 400 });
 
         const { data, error } = await supabase
             .from('products')
-            .update({ name, description, category, base_price, image_url, video_url })
+            .update({ 
+                name, name_en, description, description_en, category, base_price, image_url, video_url,
+                material_th, material_en, care_th, care_en, shipping_th, shipping_en, model_info_th, model_info_en
+            })
             .eq('id', id)
             .select()
             .single();
 
         if (error) throw error;
+        
+        // Handle variants updates
+        if (body.variants && Array.isArray(body.variants)) {
+            for (const v of body.variants) {
+                if (v.id && typeof v.id === 'string' && v.id.length > 20) {
+                    // Update existing variant
+                    await supabase.from('product_variants')
+                        .update({ size: v.size, stock_quantity: v.stock_quantity, additional_price: v.additional_price || 0 })
+                        .eq('id', v.id);
+                } else {
+                    // Insert new variant
+                    await supabase.from('product_variants')
+                        .insert([{ product_id: id, size: v.size, stock_quantity: v.stock_quantity, additional_price: v.additional_price || 0 }]);
+                }
+            }
+        }
+
         return NextResponse.json({ success: true, product: data });
     } catch (err: any) {
         return NextResponse.json({ error: err.message }, { status: 500 });

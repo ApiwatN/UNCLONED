@@ -9,11 +9,15 @@ export default function ProductForm({ onSuccess, onCancel }: { onSuccess: () => 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
+    name: '', name_en: '',
+    description: '', description_en: '',
     category: 'tops',
     base_price: '',
     video_url: '',
+    material_th: '', material_en: '',
+    care_th: '', care_en: '',
+    shipping_th: '', shipping_en: '',
+    model_info_th: '', model_info_en: '',
     variants: [{ id: Date.now(), size: 'Free Size', stock_quantity: 10, additional_price: 0 }]
   });
 
@@ -100,11 +104,15 @@ export default function ProductForm({ onSuccess, onCancel }: { onSuccess: () => 
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <label className="block text-gray-700 mb-1">ชื่อสินค้า <span className="text-red-500">*</span></label>
+                <label className="block text-gray-700 mb-1">ชื่อสินค้า (ไทย) <span className="text-red-500">*</span></label>
                 <input required type="text" className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-craft-500 outline-none" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
             </div>
-            
             <div>
+                <label className="block text-gray-700 mb-1">ชื่อสินค้า (EN)</label>
+                <input type="text" className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-craft-500 outline-none placeholder-gray-300" placeholder="Product Name (English)" value={formData.name_en} onChange={e => setFormData({...formData, name_en: e.target.value})} />
+            </div>
+            
+            <div className="md:col-span-2">
                 <label className="block text-gray-700 mb-1">ราคาเริ่มต้น (บาท) <span className="text-red-500">*</span></label>
                 <input required type="number" className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-craft-500 outline-none" value={formData.base_price} onChange={e => setFormData({...formData, base_price: e.target.value})} />
             </div>
@@ -153,9 +161,64 @@ export default function ProductForm({ onSuccess, onCancel }: { onSuccess: () => 
             ))}
         </div>
 
-        <div>
-            <label className="block text-gray-700 mb-1">คำอธิบายสินค้า</label>
-            <textarea rows={3} className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-craft-500 outline-none" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})}></textarea>
+        {/* Bilingual Detail Sections */}
+        <div className="space-y-4 pt-4 border-t border-gray-100">
+            <h3 className="font-bold text-lg text-craft-900 border-l-4 border-craft-500 pl-2">ข้อมูลสินค้าแบบ 2 ภาษา</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label className="block text-gray-700 mb-1 text-sm font-semibold">เรื่องราวสินค้า (Story - TH)</label>
+                    <textarea rows={3} className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-craft-500 outline-none" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})}></textarea>
+                </div>
+                <div>
+                    <label className="block text-gray-700 mb-1 text-sm font-semibold">เรื่องราวสินค้า (Story - EN)</label>
+                    <textarea rows={3} className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-craft-500 outline-none" value={formData.description_en} onChange={e => setFormData({...formData, description_en: e.target.value})}></textarea>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label className="block text-gray-700 mb-1 text-sm font-semibold">วัสดุ/เนื้อผ้า (Material - TH)</label>
+                    <textarea rows={2} className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-craft-500 outline-none" value={formData.material_th} onChange={e => setFormData({...formData, material_th: e.target.value})} placeholder="เช่น ผ้าฝ้าย 100%, นุ่มใส่สบาย"></textarea>
+                </div>
+                <div>
+                    <label className="block text-gray-700 mb-1 text-sm font-semibold">วัสดุ/เนื้อผ้า (Material - EN)</label>
+                    <textarea rows={2} className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-craft-500 outline-none" value={formData.material_en} onChange={e => setFormData({...formData, material_en: e.target.value})} placeholder="e.g. 100% Cotton, Breathable"></textarea>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label className="block text-gray-700 mb-1 text-sm font-semibold">การดูแลรักษา (Care - TH)</label>
+                    <textarea rows={2} className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-craft-500 outline-none" value={formData.care_th} onChange={e => setFormData({...formData, care_th: e.target.value})} placeholder="เช่น ซักมือ หรือใส่ถุงซัก"></textarea>
+                </div>
+                <div>
+                    <label className="block text-gray-700 mb-1 text-sm font-semibold">การดูแลรักษา (Care - EN)</label>
+                    <textarea rows={2} className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-craft-500 outline-none" value={formData.care_en} onChange={e => setFormData({...formData, care_en: e.target.value})} placeholder="e.g. Hand wash recommended"></textarea>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label className="block text-gray-700 mb-1 text-sm font-semibold">สัดส่วนนางแบบ (Model Info - TH)</label>
+                    <textarea rows={2} className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-craft-500 outline-none" value={formData.model_info_th} onChange={e => setFormData({...formData, model_info_th: e.target.value})} placeholder="เช่น นางแบบสูง 165 ซม. ใส่ไซส์ S"></textarea>
+                </div>
+                <div>
+                    <label className="block text-gray-700 mb-1 text-sm font-semibold">สัดส่วนนางแบบ (Model Info - EN)</label>
+                    <textarea rows={2} className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-craft-500 outline-none" value={formData.model_info_en} onChange={e => setFormData({...formData, model_info_en: e.target.value})} placeholder="e.g. Model is 165cm tall, wearing size S"></textarea>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label className="block text-gray-700 mb-1 text-sm font-semibold">การจัดส่ง/การคืน (Shipping - TH)</label>
+                    <textarea rows={2} className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-craft-500 outline-none" value={formData.shipping_th} onChange={e => setFormData({...formData, shipping_th: e.target.value})} placeholder="เช่น จัดส่ง 5-7 วัน, รับเปลี่ยนคืนใน 7 วัน"></textarea>
+                </div>
+                <div>
+                    <label className="block text-gray-700 mb-1 text-sm font-semibold">การจัดส่ง/การคืน (Shipping - EN)</label>
+                    <textarea rows={2} className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-craft-500 outline-none" value={formData.shipping_en} onChange={e => setFormData({...formData, shipping_en: e.target.value})} placeholder="e.g. Takes 5-7 days, 7-day returns"></textarea>
+                </div>
+            </div>
         </div>
 
         <div>
