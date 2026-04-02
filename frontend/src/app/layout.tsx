@@ -3,6 +3,7 @@ import { Prompt } from 'next/font/google'
 import CartSidebar from '@/components/CartSidebar'
 import { Analytics } from '@vercel/analytics/react'
 import { LanguageProvider } from '@/contexts/LanguageContext'
+import TrackingScripts from '@/components/TrackingScripts'
 import './globals.css'
 
 const prompt = Prompt({
@@ -93,6 +94,7 @@ export default function RootLayout({
           <CartSidebar />
         </LanguageProvider>
         <Analytics />
+        <TrackingScripts />
       </body>
     </html>
   )

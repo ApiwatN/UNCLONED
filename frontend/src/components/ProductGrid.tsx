@@ -11,10 +11,24 @@ export default function ProductGrid() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ทั้งหมด');
   const { lang } = useLanguage();
-  
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 8;
+
+  // Category translation map
+  const getCategoryLabel = (cat: string) => {
+    if (cat === 'ทั้งหมด') return lang === 'en' ? 'All Items' : 'ทั้งหมด';
+    if (lang === 'th') {
+      const thLabels: Record<string, string> = {
+        tops: 'เสื้อ',
+        bottoms: 'กางเกง/กระโปรง',
+        dresses: 'เดรส',
+        accessories: 'เครื่องประดับ'
+      };
+      return thLabels[cat.toLowerCase()] || cat.charAt(0).toUpperCase() + cat.slice(1);
+    }
+    return cat.charAt(0).toUpperCase() + cat.slice(1);
+  };
 
   // Reset page when filters change
   useEffect(() => {
@@ -99,7 +113,7 @@ export default function ProductGrid() {
                     : 'bg-transparent text-craft-600 hover:bg-craft-100'
                 }`}
               >
-                {cat === 'ทั้งหมด' ? (lang === 'en' ? 'All Items' : 'ทั้งหมด') : cat.charAt(0).toUpperCase() + cat.slice(1)}
+                {getCategoryLabel(cat)}
               </button>
             ))}
           </div>

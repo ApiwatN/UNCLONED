@@ -39,6 +39,36 @@ export default function ClientProductDetail({ product }: { product: any }) {
             price: displayPrice,
             quantity: quantity
         });
+
+        // E-commerce Tracking events 📈
+        if (typeof window !== 'undefined') {
+            // Google Analytics 4
+            if ((window as any).gtag) {
+                (window as any).gtag('event', 'add_to_cart', {
+                    currency: 'THB',
+                    value: displayPrice * quantity,
+                    items: [{
+                        item_id: product.id,
+                        item_name: product.name,
+                        item_category: product.category,
+                        item_variant: selectedVariant.size,
+                        price: displayPrice,
+                        quantity: quantity
+                    }]
+                });
+            }
+            // Meta Pixel
+            if ((window as any).fbq) {
+                (window as any).fbq('track', 'AddToCart', {
+                    content_name: product.name,
+                    content_ids: [product.id],
+                    content_type: 'product',
+                    value: displayPrice * quantity,
+                    currency: 'THB'
+                });
+            }
+        }
+        
         // ไม่สั่งเปิด SideBar ตามที่ลูกค้า Request เอาไว้
     };
 
@@ -84,7 +114,17 @@ export default function ClientProductDetail({ product }: { product: any }) {
                 
                 {/* Header Info */}
                 <h3 className="text-sm font-bold text-craft-500 tracking-widest uppercase mb-2">HANDCRAFTED {product.category}</h3>
-                <h1 className="text-3xl lg:text-4xl font-bold text-craft-900 mb-4 leading-tight">{lang === 'en' ? (product.name_en || product.name) : product.name}</h1>
+                <h1 className="text-3xl lg:text-4xl font-bold text-craft-900 mb-2 leading-tight">{lang === 'en' ? (product.name_en || product.name) : product.name}</h1>
+                
+                {selectedVariant && selectedVariant.stock_quantity > 0 && selectedVariant.stock_quantity <= 5 && (
+                    <div className="flex items-center mb-4">
+                        <span className="bg-orange-100 text-orange-700 text-sm font-bold px-3 py-1 rounded w-max animate-pulse border border-orange-200 shadow-sm">
+                            <span className="mr-1">🔥</span> 
+                            {lang === 'en' ? `Hurry! Only ${selectedVariant.stock_quantity} left in size ${selectedVariant.size}` : `รีบหน่อย! ไซส์ ${selectedVariant.size} เหลือเพียง ${selectedVariant.stock_quantity} ชิ้นเท่านั้น`}
+                        </span>
+                    </div>
+                )}
+
                 <p className="text-3xl font-medium text-craft-800 mb-6 border-b border-craft-100 pb-6">฿{displayPrice.toLocaleString()}</p>
 
                 {/* ส่วนการเลือกไซส์และจำนวน */}

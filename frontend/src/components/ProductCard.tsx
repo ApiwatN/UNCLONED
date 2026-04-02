@@ -26,8 +26,8 @@ export default function ProductCard({ product }: { product: any }) {
       {isOutOfStock && (
         <div className="absolute top-3 left-3 bg-red-500/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-sm z-10 shadow-sm">{lang === 'en' ? 'Out of Stock' : 'สินค้าหมด'}</div>
       )}
-      {!isOutOfStock && totalStock < 5 && (
-        <div className="absolute top-3 right-3 bg-craft-800 text-white text-xs font-bold px-3 py-1 rounded-sm z-10 shadow-sm flex items-center animate-pulse"><Star className="w-3 h-3 mr-1 fill-white"/> {lang === 'en' ? 'Low Stock!' : 'ใกล้หมด!'}</div>
+      {!isOutOfStock && totalStock <= 5 && (
+        <div className="absolute top-3 right-3 bg-orange-600 text-white text-xs font-bold px-3 py-1.5 rounded-sm z-10 shadow-xl flex items-center animate-pulse"><span className="mr-1">🔥</span> {lang === 'en' ? `Only ${totalStock} left!` : `เหลือเพียง ${totalStock} ชิ้นเท่านั้น!`}</div>
       )}
 
       {/* รูปภาพ กดแล้วไปหน้ารายละเอียด */}
