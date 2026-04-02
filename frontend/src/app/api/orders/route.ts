@@ -6,8 +6,9 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Resend ถูกสร้างใน function เพื่อหลีกเลี่ยง build-time error เมื่อยังไม่มี API key
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@uncloned.com';
+
 
 export async function POST(request: Request) {
     try {
@@ -59,12 +60,14 @@ export async function POST(request: Request) {
 
         // 4. ส่ง Email แจ้ง Admin (non-blocking — ถ้า email ล้มเหลวออเดอร์ยังบันทึกได้ปกติ)
         try {
+            const resend = new Resend(process.env.RESEND_API_KEY);
             const shortId = order.id.split('-')[0].toUpperCase();
             const itemList = items.map((item: any) => 
                 `<li>Variant: ${item.variant_id} × ${item.quantity} ชิ้น — ฿${item.price.toLocaleString()}</li>`
             ).join('');
 
             await resend.emails.send({
+
                 from: 'UNCLONED Orders <onboarding@resend.dev>',
                 to: ADMIN_EMAIL,
                 subject: `🛍️ ออเดอร์ใหม่! #${shortId} — ฿${Number(total_amount).toLocaleString()} (${customer_name})`,
