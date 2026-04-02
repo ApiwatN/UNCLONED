@@ -1,9 +1,11 @@
 'use client'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { X, UploadCloud, ShieldCheck } from 'lucide-react';
+import { X, UploadCloud, ShieldCheck, QrCode } from 'lucide-react';
 import useCartStore from '@/store/cartStore';
 import { createClient } from '@supabase/supabase-js';
+import generatePayload from 'promptpay-qr';
+import { QRCodeSVG } from 'qrcode.react';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -130,14 +132,28 @@ export default function CheckoutModal({ isOpen, onClose }: { isOpen: boolean, on
                             <textarea required rows={3} className="w-full border p-2.5 rounded-lg bg-gray-50 focus:bg-white focus:ring-2 focus:ring-craft-500 outline-none" value={formData.customer_address} onChange={e => setFormData({...formData, customer_address: e.target.value})} />
                         </div>
 
-                        {/* การโอนเงินจำลอง */}
+                        {/* PromptPay QR Code */}
                         <div className="border border-gray-200 rounded-xl p-4 bg-white">
-                            <label className="block text-gray-800 font-bold mb-3 flex items-center"><ShieldCheck className="w-4 h-4 mr-1 text-green-600"/> โอนเงินเข้าบัญชีร้านค้า</label>
-                            <div className="flex items-center space-x-4 mb-4 bg-gray-50 p-3 rounded-lg">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/e/eb/Kasikornbank_Logo.png" alt="KBank" className="h-8" />
-                                <div>
-                                    <div className="font-mono font-bold text-gray-800 text-base tracking-widest">123-4-56789-0</div>
-                                    <div className="text-xs text-gray-500">นาย จำลอง รักการขาย (กสิกรไทย)</div>
+                            <label className="block text-gray-800 font-bold mb-3 flex items-center gap-2">
+                                <QrCode className="w-4 h-4 text-craft-700"/>
+                                สแกน PromptPay เพื่อชำระเงิน
+                            </label>
+                            <div className="flex flex-col items-center bg-gradient-to-b from-craft-50 to-white border border-craft-100 rounded-xl p-5 mb-4">
+                                <div className="bg-white p-3 rounded-xl shadow-md border border-gray-100 mb-3">
+                                    <QRCodeSVG
+                                        value={generatePayload(
+                                            process.env.NEXT_PUBLIC_PROMPTPAY_ID || '0812345678',
+                                            { amount: total }
+                                        )}
+                                        size={180}
+                                        level="M"
+                                        includeMargin={false}
+                                    />
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-xs text-gray-500 mb-1">ชำระยอดเงิน</p>
+                                    <p className="text-3xl font-bold text-craft-800">฿{total.toLocaleString('th-TH', {minimumFractionDigits: 2})}</p>
+                                    <p className="text-xs text-gray-400 mt-1">พร้อมเพย์: {process.env.NEXT_PUBLIC_PROMPTPAY_ID || '081-234-5678'}</p>
                                 </div>
                             </div>
                             

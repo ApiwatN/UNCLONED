@@ -1,13 +1,15 @@
 'use client'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Plus, Edit2, Trash2, ExternalLink, Package } from 'lucide-react';
+import { Plus, Edit2, Trash2, ExternalLink, X, Save } from 'lucide-react';
 import ProductForm from '@/components/admin/ProductForm';
 
 export default function AdminProductsPage() {
     const [products, setProducts] = useState([]);
     const [showForm, setShowForm] = useState(false);
-    
+    const [editingProduct, setEditingProduct] = useState<any>(null);
+    const [editLoading, setEditLoading] = useState(false);
+
     const loadProducts = async () => {
         try {
             const res = await axios.get('/api/products');
@@ -21,8 +23,46 @@ export default function AdminProductsPage() {
         loadProducts();
     }, []);
     
+    const handleDelete = async (id: string, name: string) => {
+        if (confirm(`⚠️ คุณต้องการลบสินค้ารายการ "${name}" ออกจากระบบใช่หรือไม่?\n\n* การกระทำนี้ไม่สามารถย้อนกลับได้! สินค้าและตัวเลือกทั้งหมดจะหายไปจากคิวหน้าร้านทันที`)) {
+            try {
+                await axios.delete(`/api/admin/products?id=${id}`);
+                loadProducts();
+            } catch (error: any) {
+                alert('เกิดข้อผิดพลาดในการลบสินค้า: ' + (error.response?.data?.error || error.message));
+            }
+        }
+    };
+
+    const handleEditSave = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!editingProduct) return;
+        setEditLoading(true);
+        try {
+            await axios.patch('/api/admin/products', {
+                id: editingProduct.id,
+                name: editingProduct.name,
+                description: editingProduct.description,
+                category: editingProduct.category,
+                base_price: editingProduct.base_price,
+                image_url: editingProduct.image_url,
+                video_url: editingProduct.video_url,
+            });
+            setEditingProduct(null);
+            loadProducts();
+            alert('บันทึกการแก้ไขเรียบร้อยแล้ว ✨');
+        } catch (error: any) {
+            alert('เกิดข้อผิดพลาด: ' + (error.response?.data?.error || error.message));
+        } finally {
+            setEditLoading(false);
+        }
+    };
+
+    
     return (
+        <>
         <div className="p-8 max-w-7xl mx-auto">
+
             <div className="flex justify-between items-center mb-8 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-800">จัดการข้อมูลคลังสินค้า <span className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-500 font-normal ml-2">{products.length} รายการ</span></h1>
@@ -93,7 +133,17 @@ export default function AdminProductsPage() {
                                     )}
                                 </td>
                                 <td className="p-4 text-right align-top">
-                                    <button className="p-1.5 text-gray-400 hover:text-blue-600 transition-colors"><Edit2 className="w-4 h-4" /></button>
+                                    <div className="flex flex-col sm:flex-row justify-end items-end sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+                                        <button
+                                            id={`edit-${p.id}`}
+                                            onClick={() => setEditingProduct({ ...p })}
+                                            className="p-1.5 text-gray-400 hover:text-blue-600 transition-colors" title="แก้ไขสินค้า"
+                                        >
+                                            <Edit2 className="w-4 h-4" />
+                                        </button>
+                                        <button onClick={() => handleDelete(p.id, p.name)} className="p-1.5 text-red-300 hover:text-red-600 transition-colors bg-red-50 hover:bg-red-100 rounded-md" title="ลบสินค้าชิ้นนี้"><Trash2 className="w-4 h-4" /></button>
+
+                                    </div>
                                 </td>
                             </tr>
                         ))}
@@ -101,5 +151,61 @@ export default function AdminProductsPage() {
                 </table>
             </div>
         </div>
+
+        {/* Edit Product Modal */}
+        {editingProduct && (
+            <div className="fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm">
+                <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                    <div className="flex justify-between items-center p-6 border-b">
+                        <h2 className="text-xl font-bold text-gray-800">✉️ แก้ไขสินค้า</h2>
+                        <button onClick={() => setEditingProduct(null)} className="text-gray-400 hover:text-gray-600">
+                            <X className="w-5 h-5" />
+                        </button>
+                    </div>
+                    <form onSubmit={handleEditSave} className="p-6 space-y-4 text-sm">
+                        <div>
+                            <label className="block text-gray-600 mb-1 font-medium">ชื่อสินค้า *</label>
+                            <input required type="text" className="w-full border p-2.5 rounded-lg bg-gray-50 focus:ring-2 focus:ring-craft-400 outline-none" value={editingProduct.name || ''} onChange={e => setEditingProduct({...editingProduct, name: e.target.value})} />
+                        </div>
+                        <div>
+                            <label className="block text-gray-600 mb-1 font-medium">รายละเอียดสินค้า</label>
+                            <textarea rows={3} className="w-full border p-2.5 rounded-lg bg-gray-50 focus:ring-2 focus:ring-craft-400 outline-none" value={editingProduct.description || ''} onChange={e => setEditingProduct({...editingProduct, description: e.target.value})} />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-gray-600 mb-1 font-medium">หมวดหมู่</label>
+                                <input type="text" placeholder="เช่น shirt, pants, accessory" className="w-full border p-2.5 rounded-lg bg-gray-50 focus:ring-2 focus:ring-craft-400 outline-none" value={editingProduct.category || ''} onChange={e => setEditingProduct({...editingProduct, category: e.target.value})} />
+                            </div>
+                            <div>
+                                <label className="block text-gray-600 mb-1 font-medium">ราคา (บาท) *</label>
+                                <input required type="number" min="0" className="w-full border p-2.5 rounded-lg bg-gray-50 focus:ring-2 focus:ring-craft-400 outline-none" value={editingProduct.base_price || ''} onChange={e => setEditingProduct({...editingProduct, base_price: e.target.value})} />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-gray-600 mb-1 font-medium">URL รูปภาพหลัก</label>
+                            <input type="url" placeholder="https://res.cloudinary.com/..." className="w-full border p-2.5 rounded-lg bg-gray-50 focus:ring-2 focus:ring-craft-400 outline-none" value={editingProduct.image_url || ''} onChange={e => setEditingProduct({...editingProduct, image_url: e.target.value})} />
+                        </div>
+                        <div>
+                            <label className="block text-gray-600 mb-1 font-medium">URL วิดีโอ (ไม่บังคับ)</label>
+                            <input type="url" className="w-full border p-2.5 rounded-lg bg-gray-50 focus:ring-2 focus:ring-craft-400 outline-none" value={editingProduct.video_url || ''} onChange={e => setEditingProduct({...editingProduct, video_url: e.target.value})} />
+                        </div>
+                        {editingProduct.image_url && (
+                            <div className="mt-2">
+                                <p className="text-xs text-gray-400 mb-1">ตัวอย่างรูปภาพปัจจุบัน</p>
+                                <img src={editingProduct.image_url} alt="preview" className="h-24 w-auto rounded border object-cover" />
+                            </div>
+                        )}
+                        <div className="flex justify-end gap-3 pt-4 border-t">
+                            <button type="button" onClick={() => setEditingProduct(null)} className="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-50 transition-colors">ยกเลิก</button>
+                            <button type="submit" disabled={editLoading} className="px-5 py-2 rounded-lg bg-craft-800 text-white hover:bg-craft-900 transition-colors flex items-center gap-2 disabled:opacity-50">
+                                <Save className="w-4 h-4" />
+                                {editLoading ? 'กำลังบันทึก...' : 'บันทึกการแก้ไข'}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        )}
+        </>
     );
 }

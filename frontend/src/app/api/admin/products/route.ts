@@ -36,3 +36,38 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
+
+export async function PATCH(request: Request) {
+    try {
+        const body = await request.json();
+        const { id, name, description, category, base_price, image_url, video_url } = body;
+        if (!id) return NextResponse.json({ error: 'Missing product ID' }, { status: 400 });
+
+        const { data, error } = await supabase
+            .from('products')
+            .update({ name, description, category, base_price, image_url, video_url })
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return NextResponse.json({ success: true, product: data });
+    } catch (err: any) {
+        return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+}
+
+export async function DELETE(request: Request) {
+    try {
+        const { searchParams } = new URL(request.url);
+        const id = searchParams.get('id');
+        if (!id) return NextResponse.json({ error: 'Missing product ID' }, { status: 400 });
+        
+        const { error } = await supabase.from('products').delete().eq('id', id);
+        if (error) throw error;
+        
+        return NextResponse.json({ success: true }, { status: 200 });
+    } catch (err: any) {
+        return NextResponse.json({ error: err.message }, { status: 500 });
+    }
+}
